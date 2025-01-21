@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, ChevronRight, Menu, X } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
+import Dashboard from './components/Dashboard';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +25,10 @@ function App() {
       setIsMobileMenuOpen(false);
     }
   };
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="min-h-screen bg-indigo-950 text-white">
@@ -172,7 +179,7 @@ function App() {
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-indigo-800">
         <div className="max-w-6xl mx-auto text-center text-gray-400">
-          <p>© 2024 Celestial Guidance. All rights reserved.</p>
+          <p> 2024 Celestial Guidance. All rights reserved.</p>
         </div>
       </footer>
     </div>

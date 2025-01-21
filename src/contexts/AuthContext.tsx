@@ -65,23 +65,65 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
     if (error) throw error
+
+    // Get user profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', data.user.id)
+      .single()
+
+    setUser(data.user ? {
+      ...data.user,
+      profile: profile || null
+    } : null)
   }
 
   const signUp = async (email: string, password: string, userData: { username: string; full_name?: string }) => {
-    const { error } = await supabase.auth.signUp({
+    const { data: { user }, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: userData,
-        emailRedirectTo: `${window.location.origin}/login`
       }
     })
-    if (error) throw error
-    
-    // Sign in immediately after sign up
-    await signIn(email, password)
+    if (signUpError) throw signUpError
+
+    // Create profile
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert([
+        {
+          id: user?.id,
+          username: userData.username,
+          full_name: userData.full_name,
+          updated_at: new Date().toISOString()
+        }
+      ])
+    if (profileError) throw profileError
+
+    // Sign in immediately after signup
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+    if (signInError) throw signInError
+
+    setUser({
+      ...data.user,
+      profile: {
+        id: user?.id || '',
+        username: userData.username,
+        full_name: userData.full_name,
+        avatar_url: null,
+        updated_at: new Date().toISOString()
+      }
+    })
   }
 
   const signOut = async () => {
