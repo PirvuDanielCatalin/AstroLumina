@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, ChevronRight, Menu, X, User, LogOut, Settings } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { useLoading } from './contexts/LoadingContext';
 import Dashboard from './components/Dashboard';
+import BirthChartReading from './pages/BirthChartReading';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -150,6 +151,7 @@ function App() {
                   title: "Birth Chart Reading",
                   price: "$149",
                   description: "Deep dive into your natal chart revealing your life's purpose and potential.",
+                  link: "/birth-chart-reading" // Add a link to the BirthChartReading page
                 },
                 {
                   icon: <Sun className="w-8 h-8" />,
@@ -168,6 +170,11 @@ function App() {
                   <div className="text-amber-500 mb-4">{service.icon}</div>
                   <h3 className="text-xl font-bold text-amber-900 mb-2">{service.title}</h3>
                   <p className="text-amber-700">{service.description}</p>
+                  {service.link && (
+                    <Link to={service.link} className="text-amber-500 hover:text-amber-700 transition-colors">
+                      Learn More
+                    </Link>
+                  )}
                 </div>
               ))}
             </div>
@@ -262,6 +269,11 @@ function App() {
           <p> 2024 AstroLumina by Carmen Ilie. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* Routing */}
+      <Routes>
+        <Route path="/birth-chart-reading" element={<BirthChartReading />} />
+      </Routes>
     </div>
   );
 }
