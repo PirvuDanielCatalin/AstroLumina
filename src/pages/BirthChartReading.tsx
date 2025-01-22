@@ -14,7 +14,7 @@ const BirthChartReading: React.FC = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ padding: '20px', textAlign: 'center' }}>
       <h1>Birth Chart Reading</h1>
       <form onSubmit={handleSubmit}>
         <div>
