@@ -95,11 +95,6 @@ const LoadingAnimation: React.FC = () => {
         className="absolute inset-0"
       />
       <div className="relative z-10 text-center">
-        <div className="flex space-x-2 justify-center">
-          <div className="w-3 h-3 bg-yellow-200 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-          <div className="w-3 h-3 bg-yellow-200 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-          <div className="w-3 h-3 bg-yellow-200 rounded-full animate-bounce"></div>
-        </div>
       </div>
     </div>
   );
