@@ -5,20 +5,26 @@
 .stars {
   background: #0a0a2c;
   background-image: 
-    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
-    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px),
-    radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 1px, transparent 2px);
+    radial-gradient(white, rgba(255,255,255,.15) 2px, transparent 3px),
+    radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px),
+    radial-gradient(white, rgba(255,255,255,.07) 2px, transparent 3px),
+    radial-gradient(rgba(255,255,255,.3), rgba(255,255,255,.07) 1px, transparent 2px),
+    radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px),
+    radial-gradient(white, rgba(255,255,255,.07) 2px, transparent 3px);
   background-size: 
     550px 550px,
     350px 350px,
     250px 250px,
-    150px 150px;
+    150px 150px,
+    130px 130px,
+    100px 100px;
   background-position: 
     0 0,
     40px 60px,
     130px 270px,
-    70px 100px;
+    70px 100px,
+    200px 200px,
+    300px 300px;
   animation: twinkle 15s linear infinite;
 }
 
@@ -28,41 +34,54 @@
       0 0,
       40px 60px,
       130px 270px,
-      70px 100px;
+      70px 100px,
+      200px 200px,
+      300px 300px;
   }
   100% {
     background-position: 
       -550px -550px,
       -310px -290px,
       -120px -220px,
-      -80px -50px;
+      -80px -50px,
+      -200px -200px,
+      -300px -300px;
   }
 }
 
 @keyframes shooting-star {
   0% {
-    transform: translateX(0) translateY(0) rotate(45deg);
-    opacity: 1;
+    transform-origin: left;
+    opacity: 0.7;
+    scale: 1;
   }
   100% {
-    transform: translateX(1000px) translateY(1000px) rotate(45deg);
+    transform: translateX(1000px) translateY(1000px);
     opacity: 0;
+    scale: 0.2;
   }
 }
 
 .shooting-star {
   position: absolute;
-  width: 100px;
+  width: 150px;
   height: 1px;
-  background: linear-gradient(90deg, white, transparent);
-  animation: shooting-star 5s linear infinite;
+  background: linear-gradient(90deg, rgba(255,255,255,0.5), transparent);
+  animation: shooting-star 3s linear infinite;
+  filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));
 }
 
-.shooting-star:nth-child(1) { top: 10%; left: -10%; animation-delay: 0s; }
-.shooting-star:nth-child(2) { top: 20%; left: -10%; animation-delay: 2s; }
-.shooting-star:nth-child(3) { top: 30%; left: -10%; animation-delay: 4s; }
-.shooting-star:nth-child(4) { top: 40%; left: -10%; animation-delay: 6s; }
-.shooting-star:nth-child(5) { top: 50%; left: -10%; animation-delay: 8s; }
+/* Distribute stars across different positions and angles */
+.shooting-star:nth-child(1) { top: 0%; left: 20%; transform: rotate(45deg); animation-delay: 0s; }
+.shooting-star:nth-child(2) { top: 10%; left: 40%; transform: rotate(35deg); animation-delay: 0.5s; }
+.shooting-star:nth-child(3) { top: 20%; left: 0%; transform: rotate(55deg); animation-delay: 1s; }
+.shooting-star:nth-child(4) { top: 30%; left: 60%; transform: rotate(40deg); animation-delay: 1.5s; }
+.shooting-star:nth-child(5) { top: 40%; left: 10%; transform: rotate(50deg); animation-delay: 2s; }
+.shooting-star:nth-child(6) { top: 50%; left: 80%; transform: rotate(45deg); animation-delay: 2.5s; }
+.shooting-star:nth-child(7) { top: 60%; left: 30%; transform: rotate(35deg); animation-delay: 1.2s; }
+.shooting-star:nth-child(8) { top: 70%; left: 50%; transform: rotate(55deg); animation-delay: 1.7s; }
+.shooting-star:nth-child(9) { top: 80%; left: 15%; transform: rotate(40deg); animation-delay: 0.7s; }
+.shooting-star:nth-child(10) { top: 90%; left: 70%; transform: rotate(50deg); animation-delay: 0.2s; }
 
 @keyframes twinkle {
   0%, 100% {

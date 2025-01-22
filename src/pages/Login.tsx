@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Star, LogIn, UserPlus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Star } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
-export default function Login() {
-  const [isSignUp, setIsSignUp] = useState(false);
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
 
@@ -50,130 +50,166 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-indigo-950 flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-white">
-            <Star className="w-8 h-8 text-amber-400" />
-            <span className="text-2xl font-bold">AstroLumina</span>
-          </Link>
-        </div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Starry background */}
+      <div className="absolute inset-0 stars">
+        {/* Shooting stars */}
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        
+        {/* Subtle overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30"></div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
+        {/* Logo and Title */}
+        <div className="mb-8 text-center">
+          <div className="flex justify-center mb-4">
+            <Star className="w-12 h-12 text-yellow-200" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">
             {isSignUp ? 'Create Account' : 'Welcome Back'}
           </h2>
-          
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          )}
+          <p className="text-yellow-100/80">
+            {isSignUp ? 'Sign up to continue your astrological journey' : 'Sign in to continue your astrological journey'}
+          </p>
+        </div>
 
-          <div className="space-y-6">
+        {/* Login Form */}
+        <div className="w-full max-w-md bg-black/30 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-white/10">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
+              <label htmlFor="email" className="block text-sm font-medium text-yellow-100 mb-2">
+                Email Address
               </label>
               <input
                 id="email"
                 type="email"
                 required
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent transition-all"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
             {isSignUp && (
               <>
                 <div>
-                  <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="username" className="block text-sm font-medium text-yellow-100 mb-2">
                     Username
                   </label>
                   <input
                     id="username"
                     type="text"
                     required
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent transition-all"
+                    placeholder="Enter your username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="fullName" className="block text-sm font-medium text-yellow-100 mb-2">
                     Full Name
                   </label>
                   <input
                     id="fullName"
                     type="text"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent transition-all"
+                    placeholder="Enter your full name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
               </>
             )}
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-yellow-100 mb-2">
                 Password
               </label>
               <input
                 id="password"
                 type="password"
                 required
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent transition-all"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-white/20 bg-white/10 text-yellow-400 focus:ring-yellow-400/50"
+                />
+                <label htmlFor="remember-me" className="ml-2 block text-yellow-100">
+                  Remember me
+                </label>
+              </div>
+              {!isSignUp && (
+                <a href="#" className="text-yellow-200 hover:text-yellow-100 transition-colors">
+                  Forgot password?
+                </a>
+              )}
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full bg-yellow-400 text-slate-900 py-3 px-4 rounded-lg font-semibold hover:bg-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/25"
             >
               {loading ? (
                 'Processing...'
               ) : (
                 <>
                   {isSignUp ? (
-                    <>
-                      <UserPlus className="w-5 h-5 mr-2" />
-                      Sign Up
-                    </>
+                    <>Sign Up</>
                   ) : (
-                    <>
-                      <LogIn className="w-5 h-5 mr-2" />
-                      Sign In
-                    </>
+                    <>Sign In</>
                   )}
                 </>
               )}
             </button>
 
-            <div className="text-center mt-4">
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-indigo-600 hover:text-indigo-500"
-              >
-                {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-              </button>
+            <div className="mt-6 text-center">
+              <p className="text-yellow-100">
+                {isSignUp ? (
+                  <>Already have an account?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setIsSignUp(false)}
+                      className="text-yellow-200 hover:text-yellow-100 transition-colors font-semibold"
+                    >
+                      Sign In
+                    </button>
+                  </>
+                ) : (
+                  <>Don't have an account?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setIsSignUp(true)}
+                      className="text-yellow-200 hover:text-yellow-100 transition-colors font-semibold"
+                    >
+                      Sign Up
+                    </button>
+                  </>
+                )}
+              </p>
             </div>
-            
-            {!isSignUp && (
-              <div className="text-center mt-2">
-                <Link to="/reset-password" className="text-sm text-indigo-600 hover:text-indigo-500">
-                  Forgot your password?
-                </Link>
-              </div>
-            )}
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Login;

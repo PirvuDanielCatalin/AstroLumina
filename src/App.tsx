@@ -49,119 +49,51 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
-      {/* Navigation Header */}
-      <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-md' : 'bg-transparent'}`}>
-        <nav className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/" className="text-2xl font-bold text-amber-900 flex items-center space-x-2">
-                <Star className="h-8 w-8 text-amber-500" />
-                <span className="text-xl font-bold">AstroLumina</span>
-              </Link>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <button onClick={() => scrollToSection('services')} className="text-amber-900 hover:text-amber-600 transition-colors">Services</button>
-              <button onClick={() => scrollToSection('features')} className="text-amber-900 hover:text-amber-600 transition-colors">Features</button>
-              <button onClick={() => scrollToSection('contact')} className="text-amber-900 hover:text-amber-600 transition-colors">Contact</button>
-              
-              {user ? (
-                <div className="relative">
-                  <button
-                    onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex items-center space-x-2 text-amber-900 hover:text-amber-600 transition-colors focus:outline-none"
-                  >
-                    <span>{user.profile?.full_name || 'User'}</span>
-                    <User className="h-5 w-5" />
-                  </button>
-                  
-                  {isProfileOpen && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                      <div className="py-1" role="menu">
-                        <Link
-                          to="/edit-profile"
-                          className="flex items-center px-4 py-2 text-sm text-amber-900 hover:bg-amber-50"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <Settings className="h-4 w-4 mr-2" />
-                          Edit Profile
-                        </Link>
-                        <button
-                          onClick={() => {
-                            handleSignOut();
-                            setIsProfileOpen(false);
-                          }}
-                          className="flex items-center w-full px-4 py-2 text-sm text-amber-900 hover:bg-amber-50"
-                        >
-                          <LogOut className="h-4 w-4 mr-2" />
-                          Sign Out
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link to="/login" className="bg-amber-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-amber-400 transition-colors shadow-md">
-                  Sign In
-                </Link>
-              )}
-            </div>
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-amber-900 hover:text-amber-600 transition-colors"
-            >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-
-          {/* Mobile Navigation */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden mt-4 space-y-4 bg-white rounded-lg p-4 shadow-lg">
-              <button onClick={() => scrollToSection('services')} className="block w-full text-left text-amber-900 hover:text-amber-600 transition-colors">Services</button>
-              <button onClick={() => scrollToSection('features')} className="block w-full text-left text-amber-900 hover:text-amber-600 transition-colors">Features</button>
-              <button onClick={() => scrollToSection('contact')} className="block w-full text-left text-amber-900 hover:text-amber-600 transition-colors">Contact</button>
-              
-              {user ? (
-                <>
-                  <div className="pt-4 border-t border-amber-100">
-                    <p className="text-amber-900 mb-2">{user.profile?.full_name || 'User'}</p>
-                    <Link
-                      to="/edit-profile"
-                      className="block w-full text-left text-amber-900 hover:text-amber-600 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Edit Profile
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="block w-full text-left text-amber-900 hover:text-amber-600 transition-colors mt-2"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  className="block w-full text-center bg-amber-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-amber-400 transition-colors shadow-md"
-                  onClick={() => setIsMobileMenuOpen(false)}
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
+        <div className="container mx-auto px-6">
+          <div className="relative flex items-center justify-between h-16">
+            <div className="flex-1 flex items-center justify-between">
+              <div className="flex-shrink-0">
+                <a 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="text-xl font-bold text-white hover:text-yellow-200 transition-colors"
                 >
-                  Sign In
-                </Link>
-              )}
+                  AstroLumina
+                </a>
+              </div>
+              <div className="hidden md:block">
+                <div className="ml-10 flex items-baseline space-x-4">
+                  <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">Services</a>
+                  <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">About</a>
+                  <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">Contact</a>
+                  <Link
+                    to="/login"
+                    className="bg-yellow-400 text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/25 ml-4"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              </div>
             </div>
-          )}
-        </nav>
-      </header>
+          </div>
+        </div>
+      </nav>
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Starry background */}
         <div className="absolute inset-0 stars">
           {/* Shooting stars */}
+          <div className="shooting-star"></div>
+          <div className="shooting-star"></div>
+          <div className="shooting-star"></div>
+          <div className="shooting-star"></div>
+          <div className="shooting-star"></div>
           <div className="shooting-star"></div>
           <div className="shooting-star"></div>
           <div className="shooting-star"></div>
