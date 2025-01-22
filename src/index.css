@@ -1,3 +1,78 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.stars {
+  background: #0a0a2c;
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px),
+    radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 1px, transparent 2px);
+  background-size: 
+    550px 550px,
+    350px 350px,
+    250px 250px,
+    150px 150px;
+  background-position: 
+    0 0,
+    40px 60px,
+    130px 270px,
+    70px 100px;
+  animation: twinkle 15s linear infinite;
+}
+
+@keyframes twinkle {
+  0% {
+    background-position: 
+      0 0,
+      40px 60px,
+      130px 270px,
+      70px 100px;
+  }
+  100% {
+    background-position: 
+      -550px -550px,
+      -310px -290px,
+      -120px -220px,
+      -80px -50px;
+  }
+}
+
+@keyframes shooting-star {
+  0% {
+    transform: translateX(0) translateY(0) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(1000px) translateY(1000px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+.shooting-star {
+  position: absolute;
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, white, transparent);
+  animation: shooting-star 5s linear infinite;
+}
+
+.shooting-star:nth-child(1) { top: 10%; left: -10%; animation-delay: 0s; }
+.shooting-star:nth-child(2) { top: 20%; left: -10%; animation-delay: 2s; }
+.shooting-star:nth-child(3) { top: 30%; left: -10%; animation-delay: 4s; }
+.shooting-star:nth-child(4) { top: 40%; left: -10%; animation-delay: 6s; }
+.shooting-star:nth-child(5) { top: 50%; left: -10%; animation-delay: 8s; }
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}

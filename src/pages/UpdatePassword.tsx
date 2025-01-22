@@ -45,7 +45,7 @@ export default function UpdatePassword() {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-white">
             <Star className="w-8 h-8 text-amber-400" />
-            <span className="text-2xl font-bold">Celestial</span>
+            <span className="text-2xl font-bold">AstroLumina</span>
           </Link>
         </div>
 

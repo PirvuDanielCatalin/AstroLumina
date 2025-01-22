@@ -32,7 +32,17 @@ export default function Login() {
         navigate('/'); // Redirect to home page after successful login
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to authenticate');
+      let errorMessage = 'Authentication failed';
+      
+      if (err.message.includes('Invalid login credentials')) {
+        errorMessage = 'Invalid email or password';
+      } else if (err.message.includes('User profile not found')) {
+        errorMessage = 'Account not found. Please sign up first.';
+      } else if (err.message.includes('Email not confirmed')) {
+        errorMessage = 'Please verify your email before logging in.';
+      }
+      
+      setError(errorMessage);
       console.error('Auth error:', err);
     } finally {
       setLoading(false);
@@ -45,7 +55,7 @@ export default function Login() {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-white">
             <Star className="w-8 h-8 text-amber-400" />
-            <span className="text-2xl font-bold">Celestial</span>
+            <span className="text-2xl font-bold">AstroLumina</span>
           </Link>
         </div>
 

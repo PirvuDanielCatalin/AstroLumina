@@ -65,23 +65,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-    if (error) throw error
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      
+      if (error) throw error;
 
-    // Get user profile
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', data.user.id)
-      .single()
+      if (!data.user) {
+        throw new Error('No user data returned after login');
+      }
 
-    setUser(data.user ? {
-      ...data.user,
-      profile: profile || null
-    } : null)
+      // Get user profile
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profileError) {
+        // If profile fetch fails, sign out the user and throw error
+        await supabase.auth.signOut();
+        throw new Error('User profile not found. Please sign up again.');
+      }
+
+      setUser({
+        ...data.user,
+        profile: profile || null
+      });
+    } catch (error: any) {
+      // Sign out if something went wrong
+      await supabase.auth.signOut();
+      throw error;
+    }
   }
 
   const signUp = async (email: string, password: string, userData: { username: string; full_name?: string }) => {
