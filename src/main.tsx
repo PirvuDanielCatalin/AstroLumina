@@ -18,8 +18,8 @@ createRoot(document.getElementById('root')!).render(
         <Router>
           <Routes>
             <Route path="/" element={<App />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+            {/* <Route path="/login" element={<Login />} /> */}
+            {/* <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route
               path="/edit-profile"
@@ -28,7 +28,7 @@ createRoot(document.getElementById('root')!).render(
                   <EditProfile />
                 </ProtectedRoute>
               }
-            />
+            /> */}
           </Routes>
         </Router>
       </LoadingProvider>

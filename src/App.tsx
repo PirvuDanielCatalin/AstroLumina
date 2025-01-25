@@ -72,12 +72,12 @@ function App() {
                   <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">Services</a>
                   <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">About</a>
                   <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">Contact</a>
-                  <Link
+                  {/* <Link
                     to="/login"
                     className="bg-yellow-400 text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/25 ml-4"
                   >
                     Sign In
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>
