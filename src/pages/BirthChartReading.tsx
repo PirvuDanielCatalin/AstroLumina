@@ -14,43 +14,76 @@ const BirthChartReading: React.FC = () => {
   };
 
   return (
-    <div className="container" style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Birth Chart Reading</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="birthDate">Birth Date (dd/mm/yyyy):</label>
-          <input
-            type="text"
-            id="birthDate"
-            value={birthDate}
-            onChange={(e) => setBirthDate(e.target.value)}
-            placeholder="dd/mm/yyyy"
-            required
-          />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Starry background */}
+      <div className="absolute inset-0 stars">
+        {/* Shooting stars */}
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        
+        {/* Subtle overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30"></div>
+      </div>
+
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
+        {/* Logo and Title */}
+        <div className="mb-8 text-center">
+          <div className="flex justify-center mb-4">
+            <Star className="w-12 h-12 text-yellow-200" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">
+            {isSignUp ? 'Create Account' : 'Welcome Back'}
+          </h2>
+          <p className="text-yellow-100/80">
+            {isSignUp ? 'Sign up to continue your astrological journey' : 'Sign in to continue your astrological journey'}
+          </p>
         </div>
-        <div>
-          <label htmlFor="birthHour">Birth Hour (hh:mm):</label>
-          <input
-            type="text"
-            id="birthHour"
-            value={birthHour}
-            onChange={(e) => setBirthHour(e.target.value)}
-            placeholder="hh:mm"
-            required
-          />
+
+        <div className="w-full max-w-md bg-black/30 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-white/10">
+          <h1 className="text-4xl font-bold text-center text-amber-900">Birth Chart Reading</h1>
+          <form className="max-w-md mx-auto mt-8 p-4 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date (dd/mm/yyyy):</label>
+              <input
+                type="text"
+                id="birthDate"
+                className="w-full p-2 border border-amber-100 rounded"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                placeholder="dd/mm/yyyy"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour (hh:mm):</label>
+              <input
+                type="text"
+                id="birthHour"
+                className="w-full p-2 border border-amber-100 rounded"
+                value={birthHour}
+                onChange={(e) => setBirthHour(e.target.value)}
+                placeholder="hh:mm"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-amber-900 mb-2" htmlFor="birthLocation">Birth Location (City/County/Country):</label>
+              <input
+                type="text"
+                id="birthLocation"
+                className="w-full p-2 border border-amber-100 rounded"
+                value={birthLocation}
+                onChange={(e) => setBirthLocation(e.target.value)}
+                required
+              />
+            </div>
+            <button className="w-full p-2 bg-amber-900 text-white rounded hover:bg-amber-700" type="submit">Get Reading</button>
+          </form>
         </div>
-        <div>
-          <label htmlFor="birthLocation">Birth Location (City/County/Country):</label>
-          <input
-            type="text"
-            id="birthLocation"
-            value={birthLocation}
-            onChange={(e) => setBirthLocation(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
+      </div>
     </div>
   );
 };
