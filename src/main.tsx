@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App.tsx';
+import BirthChartReading from './pages/BirthChartReading';
 import Login from './pages/Login.tsx';
 import ResetPassword from './pages/ResetPassword.tsx';
 import UpdatePassword from './pages/UpdatePassword.tsx';
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
         <Router>
           <Routes>
             <Route path="/" element={<App />} />
+            <Route path="/birth-chart-reading" element={<BirthChartReading />} />
             {/* <Route path="/login" element={<Login />} /> */}
             {/* <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
