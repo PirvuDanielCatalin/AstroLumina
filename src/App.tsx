@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, ChevronRight, Menu, X, User, LogOut, Settings } from 'lucide-react';
-import { Link, useNavigate, Route, Routes } from 'react-router-dom';
+import { Link, useNavigate, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { useLoading } from './contexts/LoadingContext';
 import Dashboard from './components/Dashboard';
@@ -263,6 +263,7 @@ function App() {
         </section>
       </div>
 
+      <Router>
       {/* Footer */}
       <footer className="py-8 px-4 bg-amber-50 border-t border-amber-100">
         <div className="max-w-6xl mx-auto text-center text-amber-900">
@@ -274,6 +275,7 @@ function App() {
       <Routes>
         <Route path="/birth-chart-reading" element={<BirthChartReading />} />
       </Routes>
+      </Router>
     </div>
   );
 }
