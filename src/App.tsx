@@ -49,6 +49,7 @@ function App() {
   };
 
   return (
+  <Router>
     <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
@@ -263,7 +264,6 @@ function App() {
         </section>
       </div>
 
-      <Router>
       {/* Footer */}
       <footer className="py-8 px-4 bg-amber-50 border-t border-amber-100">
         <div className="max-w-6xl mx-auto text-center text-amber-900">
@@ -275,8 +275,8 @@ function App() {
       <Routes>
         <Route path="/birth-chart-reading" element={<BirthChartReading />} />
       </Routes>
-      </Router>
     </div>
+  </Router>
   );
 }
 
