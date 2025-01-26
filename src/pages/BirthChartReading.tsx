@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const BirthChartReading: React.FC = () => {
@@ -35,15 +36,11 @@ const BirthChartReading: React.FC = () => {
             <Star className="w-12 h-12 text-yellow-200" />
           </div>
           <h2 className="text-3xl font-bold text-white mb-2">
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
+            Birth Chart Reading
           </h2>
-          <p className="text-yellow-100/80">
-            {isSignUp ? 'Sign up to continue your astrological journey' : 'Sign in to continue your astrological journey'}
-          </p>
         </div>
 
         <div className="w-full max-w-md bg-black/30 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-white/10">
-          <h1 className="text-4xl font-bold text-center text-amber-900">Birth Chart Reading</h1>
           <form className="max-w-md mx-auto mt-8 p-4 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date (dd/mm/yyyy):</label>
