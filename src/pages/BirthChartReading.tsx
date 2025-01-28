@@ -13,8 +13,8 @@ const BirthChartReading: React.FC = () => {
   const [birthCity, setBirthCity] = useState('');
   const [fullName, setFullName] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [counties, setCounties] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [counties, setCounties] = useState<{ value: string, label: string }[]>([]);
+  const [cities, setCities] = useState<{ value: string, label: string }[]>([]);
   const navigate = useNavigate();
 
   const countryOptions = countryList().getData();
@@ -23,7 +23,8 @@ const BirthChartReading: React.FC = () => {
     if (birthCountry) {
       // Fetch counties based on selected country
       axios.get(`/api/counties?country=${birthCountry}`).then(response => {
-        setCounties(response.data);
+        const countyOptions = response.data.map((county: string) => ({ value: county, label: county }));
+        setCounties(countyOptions);
         setBirthCounty('');
         setBirthCity('');
       });
@@ -34,7 +35,8 @@ const BirthChartReading: React.FC = () => {
     if (birthCounty) {
       // Fetch cities based on selected county
       axios.get(`/api/cities?country=${birthCountry}&county=${birthCounty}`).then(response => {
-        setCities(response.data);
+        const cityOptions = response.data.map((city: string) => ({ value: city, label: city }));
+        setCities(cityOptions);
         setBirthCity('');
       });
     }
@@ -102,8 +104,8 @@ const BirthChartReading: React.FC = () => {
           </h2>
         </div>
 
-        <div className="w-full max-w-lg bg-black/30 backdrop-blur-lg rounded-2xl p-12 shadow-xl border border-white/10">
-          <form className="max-w-lg mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
+        <div className="w-full max-w-2xl bg-black/30 backdrop-blur-lg rounded-2xl p-12 shadow-xl border border-white/10">
+          <form className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
             <div className="mb-6">
               <label className="block text-amber-900 mb-2" htmlFor="fullName">Full Name:</label>
               <input
@@ -156,8 +158,8 @@ const BirthChartReading: React.FC = () => {
               <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County:</label>
               <Select
                 id="birthCounty"
-                options={counties.map(county => ({ value: county, label: county }))}
-                value={counties.find(county => county === birthCounty)}
+                options={counties}
+                value={counties.find(county => county.value === birthCounty)}
                 onChange={(option) => setBirthCounty(option?.value || '')}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
@@ -168,8 +170,8 @@ const BirthChartReading: React.FC = () => {
               <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City:</label>
               <Select
                 id="birthCity"
-                options={cities.map(city => ({ value: city, label: city }))}
-                value={cities.find(city => city === birthCity)}
+                options={cities}
+                value={cities.find(city => city.value === birthCity)}
                 onChange={(option) => setBirthCity(option?.value || '')}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
