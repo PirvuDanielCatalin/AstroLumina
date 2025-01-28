@@ -1,17 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
+import axios from 'axios';
 
 const BirthChartReading: React.FC = () => {
   const [birthDate, setBirthDate] = useState('');
   const [birthHour, setBirthHour] = useState('');
-  const [birthLocation, setBirthLocation] = useState('');
+  const [birthCountry, setBirthCountry] = useState('');
+  const [birthCounty, setBirthCounty] = useState('');
+  const [birthCity, setBirthCity] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [counties, setCounties] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
   const navigate = useNavigate();
+
+  const countryOptions = countryList().getData();
+
+  useEffect(() => {
+    if (birthCountry) {
+      // Fetch counties based on selected country
+      axios.get(`/api/counties?country=${birthCountry}`).then(response => {
+        setCounties(response.data);
+        setBirthCounty('');
+        setBirthCity('');
+      });
+    }
+  }, [birthCountry]);
+
+  useEffect(() => {
+    if (birthCounty) {
+      // Fetch cities based on selected county
+      axios.get(`/api/cities?country=${birthCountry}&county=${birthCounty}`).then(response => {
+        setCities(response.data);
+        setBirthCity('');
+      });
+    }
+  }, [birthCounty]);
+
+  const validateInputs = () => {
+    const newErrors: { [key: string]: string } = {};
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    const timePattern = /^\d{2}:\d{2}$/;
+
+    if (!fullName.trim()) {
+      newErrors.fullName = 'Full Name is required';
+    }
+    if (!birthDate.match(datePattern)) {
+      newErrors.birthDate = 'Birth Date must be in yyyy-mm-dd format';
+    }
+    if (!birthHour.match(timePattern)) {
+      newErrors.birthHour = 'Birth Hour must be in hh:mm format';
+    }
+    if (!birthCountry) {
+      newErrors.birthCountry = 'Birth Country is required';
+    }
+    if (!birthCounty) {
+      newErrors.birthCounty = 'Birth County is required';
+    }
+    if (!birthCity) {
+      newErrors.birthCity = 'Birth City is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({ birthDate, birthHour, birthLocation });
+    if (validateInputs()) {
+      // Handle form submission logic here
+      console.log({ birthDate, birthHour, birthCountry, birthCounty, birthCity, fullName });
+    }
   };
 
   return (
@@ -40,44 +102,81 @@ const BirthChartReading: React.FC = () => {
           </h2>
         </div>
 
-        <div className="w-full max-w-md bg-black/30 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-white/10">
-          <form className="max-w-md mx-auto mt-8 p-4 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date (dd/mm/yyyy):</label>
+        <div className="w-full max-w-lg bg-black/30 backdrop-blur-lg rounded-2xl p-12 shadow-xl border border-white/10">
+          <form className="max-w-lg mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
+            <div className="mb-6">
+              <label className="block text-amber-900 mb-2" htmlFor="fullName">Full Name:</label>
               <input
                 type="text"
+                id="fullName"
+                className="w-full p-3 border border-amber-100 rounded"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+              />
+              {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+            </div>
+            <div className="mb-6">
+              <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date:</label>
+              <input
+                type="date"
                 id="birthDate"
-                className="w-full p-2 border border-amber-100 rounded"
+                className="w-full p-3 border border-amber-100 rounded"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                placeholder="dd/mm/yyyy"
                 required
               />
+              {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
             </div>
-            <div className="mb-4">
-              <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour (hh:mm):</label>
+            <div className="mb-6">
+              <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour:</label>
               <input
-                type="text"
+                type="time"
                 id="birthHour"
-                className="w-full p-2 border border-amber-100 rounded"
+                className="w-full p-3 border border-amber-100 rounded"
                 value={birthHour}
                 onChange={(e) => setBirthHour(e.target.value)}
-                placeholder="hh:mm"
                 required
               />
+              {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
             </div>
-            <div className="mb-4">
-              <label className="block text-amber-900 mb-2" htmlFor="birthLocation">Birth Location (City/County/Country):</label>
-              <input
-                type="text"
-                id="birthLocation"
-                className="w-full p-2 border border-amber-100 rounded"
-                value={birthLocation}
-                onChange={(e) => setBirthLocation(e.target.value)}
+            <div className="mb-6">
+              <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country:</label>
+              <Select
+                id="birthCountry"
+                options={countryOptions}
+                value={countryOptions.find(option => option.value === birthCountry)}
+                onChange={(option) => setBirthCountry(option?.value || '')}
+                className="w-full p-3 border border-amber-100 rounded"
                 required
               />
+              {errors.birthCountry && <p className="text-red-500 text-sm mt-1">{errors.birthCountry}</p>}
             </div>
-            <button className="w-full p-2 bg-amber-900 text-white rounded hover:bg-amber-700" type="submit">Get Reading</button>
+            <div className="mb-6">
+              <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County:</label>
+              <Select
+                id="birthCounty"
+                options={counties.map(county => ({ value: county, label: county }))}
+                value={counties.find(county => county === birthCounty)}
+                onChange={(option) => setBirthCounty(option?.value || '')}
+                className="w-full p-3 border border-amber-100 rounded"
+                required
+              />
+              {errors.birthCounty && <p className="text-red-500 text-sm mt-1">{errors.birthCounty}</p>}
+            </div>
+            <div className="mb-6">
+              <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City:</label>
+              <Select
+                id="birthCity"
+                options={cities.map(city => ({ value: city, label: city }))}
+                value={cities.find(city => city === birthCity)}
+                onChange={(option) => setBirthCity(option?.value || '')}
+                className="w-full p-3 border border-amber-100 rounded"
+                required
+              />
+              {errors.birthCity && <p className="text-red-500 text-sm mt-1">{errors.birthCity}</p>}
+            </div>
+            <button className="w-full p-3 bg-amber-900 text-white rounded hover:bg-amber-700" type="submit">Get Reading</button>
           </form>
         </div>
       </div>
