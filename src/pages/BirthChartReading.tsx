@@ -49,7 +49,7 @@ const BirthChartReading: React.FC = () => {
     if (birthCity) {
       const cityData = City.getCitiesOfState(birthCountry, birthCounty).find(city => city.name === birthCity);
       if (cityData) {
-        setCoordinates({ lat: cityData.latitude, lng: cityData.longitude });
+        setCoordinates({ lat: Number(cityData.latitude), lng: Number(cityData.longitude) });
       }
     }
   }, [birthCity]);
