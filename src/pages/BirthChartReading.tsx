@@ -12,32 +12,33 @@ const BirthChartReading: React.FC = () => {
   const [birthCity, setBirthCity] = useState('');
   const [fullName, setFullName] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [countryOptions, setCountryOptions] = useState<{ value: string, label: string }[]>([]);
-  const [stateOptions, setStateOptions] = useState<{ value: string, label: string }[]>([]);
-  const [cityOptions, setCityOptions] = useState<{ value: string, label: string }[]>([]);
+  const [countryOptions, setCountryOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
+  const [stateOptions, setStateOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
+  const [cityOptions, setCityOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const countries = Country.getAllCountries().map(country => ({ value: country.isoCode, label: country.name }));
-    setCountryOptions(countries);
+    setCountryOptions([{ value: '', label: 'Select ...' }, ...countries]);
   }, []);
 
   useEffect(() => {
     if (birthCountry) {
       const states = State.getStatesOfCountry(birthCountry).map(state => ({
         value: state.isoCode,
-        label: state.name.replace(/ County$/, '') // Remove 'County' from the label
+        label: state.name.replace(/ County$| Province$/, '') // Remove 'County' and 'Province' from the label
       }));
-      setStateOptions(states);
+      setStateOptions([{ value: '', label: 'Select ...' }, ...states]);
       setBirthCounty('');
       setBirthCity('');
+      setCityOptions([{ value: '', label: 'Select ...' }]); // Reset city options
     }
   }, [birthCountry]);
 
   useEffect(() => {
     if (birthCounty) {
       const cities = City.getCitiesOfState(birthCountry, birthCounty).map(city => ({ value: city.name, label: city.name }));
-      setCityOptions(cities);
+      setCityOptions([{ value: '', label: 'Select ...' }, ...cities]);
       setBirthCity('');
     }
   }, [birthCounty]);
@@ -152,8 +153,8 @@ const BirthChartReading: React.FC = () => {
                   setBirthCountry(option?.value || '');
                   setBirthCounty('');
                   setBirthCity('');
-                  setStateOptions([]);
-                  setCityOptions([]);
+                  setStateOptions([{ value: '', label: 'Select ...' }]);
+                  setCityOptions([{ value: '', label: 'Select ...' }]);
                 }}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
@@ -169,7 +170,7 @@ const BirthChartReading: React.FC = () => {
                 onChange={(option) => {
                   setBirthCounty(option?.value || '');
                   setBirthCity('');
-                  setCityOptions([]);
+                  setCityOptions([{ value: '', label: 'Select ...' }]);
                 }}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
