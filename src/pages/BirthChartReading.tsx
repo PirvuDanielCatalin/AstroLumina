@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Country, State, City } from 'react-country-state-city';
+import Select from 'react-select';
+import { Country, State, City } from 'country-state-city';
 
 const BirthChartReading: React.FC = () => {
   const [birthDate, setBirthDate] = useState('');
@@ -11,7 +12,32 @@ const BirthChartReading: React.FC = () => {
   const [birthCity, setBirthCity] = useState('');
   const [fullName, setFullName] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [countryOptions, setCountryOptions] = useState<{ value: string, label: string }[]>([]);
+  const [stateOptions, setStateOptions] = useState<{ value: string, label: string }[]>([]);
+  const [cityOptions, setCityOptions] = useState<{ value: string, label: string }[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const countries = Country.getAllCountries().map(country => ({ value: country.isoCode, label: country.name }));
+    setCountryOptions(countries);
+  }, []);
+
+  useEffect(() => {
+    if (birthCountry) {
+      const states = State.getStatesOfCountry(birthCountry).map(state => ({ value: state.isoCode, label: state.name }));
+      setStateOptions(states);
+      setBirthCounty('');
+      setBirthCity('');
+    }
+  }, [birthCountry]);
+
+  useEffect(() => {
+    if (birthCounty) {
+      const cities = City.getCitiesOfState(birthCountry, birthCounty).map(city => ({ value: city.name, label: city.name }));
+      setCityOptions(cities);
+      setBirthCity('');
+    }
+  }, [birthCounty]);
 
   const validateInputs = () => {
     const newErrors: { [key: string]: string } = {};
@@ -115,10 +141,11 @@ const BirthChartReading: React.FC = () => {
             </div>
             <div className="mb-6">
               <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country:</label>
-              <Country
+              <Select
                 id="birthCountry"
-                value={birthCountry}
-                onChange={(value) => setBirthCountry(value)}
+                options={countryOptions}
+                value={countryOptions.find(option => option.value === birthCountry)}
+                onChange={(option) => setBirthCountry(option?.value || '')}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
@@ -126,11 +153,11 @@ const BirthChartReading: React.FC = () => {
             </div>
             <div className="mb-6">
               <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County:</label>
-              <State
+              <Select
                 id="birthCounty"
-                country={birthCountry}
-                value={birthCounty}
-                onChange={(value) => setBirthCounty(value)}
+                options={stateOptions}
+                value={stateOptions.find(option => option.value === birthCounty)}
+                onChange={(option) => setBirthCounty(option?.value || '')}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
@@ -138,12 +165,11 @@ const BirthChartReading: React.FC = () => {
             </div>
             <div className="mb-6">
               <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City:</label>
-              <City
+              <Select
                 id="birthCity"
-                country={birthCountry}
-                state={birthCounty}
-                value={birthCity}
-                onChange={(value) => setBirthCity(value)}
+                options={cityOptions}
+                value={cityOptions.find(option => option.value === birthCity)}
+                onChange={(option) => setBirthCity(option?.value || '')}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
