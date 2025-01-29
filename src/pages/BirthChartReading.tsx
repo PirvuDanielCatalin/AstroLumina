@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Select from 'react-select';
-import countryList from 'react-select-country-list';
-import axios from 'axios';
+import { Country, State, City } from 'react-country-state-city';
 
 const BirthChartReading: React.FC = () => {
   const [birthDate, setBirthDate] = useState('');
@@ -13,34 +11,7 @@ const BirthChartReading: React.FC = () => {
   const [birthCity, setBirthCity] = useState('');
   const [fullName, setFullName] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [counties, setCounties] = useState<{ value: string, label: string }[]>([]);
-  const [cities, setCities] = useState<{ value: string, label: string }[]>([]);
   const navigate = useNavigate();
-
-  const countryOptions = countryList().getData();
-
-  useEffect(() => {
-    if (birthCountry) {
-      // Fetch counties based on selected country
-      axios.get(`/api/counties?country=${birthCountry}`).then(response => {
-        const countyOptions = response.data.map((county: string) => ({ value: county, label: county }));
-        setCounties(countyOptions);
-        setBirthCounty('');
-        setBirthCity('');
-      });
-    }
-  }, [birthCountry]);
-
-  useEffect(() => {
-    if (birthCounty) {
-      // Fetch cities based on selected county
-      axios.get(`/api/cities?country=${birthCountry}&county=${birthCounty}`).then(response => {
-        const cityOptions = response.data.map((city: string) => ({ value: city, label: city }));
-        setCities(cityOptions);
-        setBirthCity('');
-      });
-    }
-  }, [birthCounty]);
 
   const validateInputs = () => {
     const newErrors: { [key: string]: string } = {};
@@ -144,11 +115,10 @@ const BirthChartReading: React.FC = () => {
             </div>
             <div className="mb-6">
               <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country:</label>
-              <Select
+              <Country
                 id="birthCountry"
-                options={countryOptions}
-                value={countryOptions.find(option => option.value === birthCountry)}
-                onChange={(option) => setBirthCountry(option?.value || '')}
+                value={birthCountry}
+                onChange={(value) => setBirthCountry(value)}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
@@ -156,11 +126,11 @@ const BirthChartReading: React.FC = () => {
             </div>
             <div className="mb-6">
               <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County:</label>
-              <Select
+              <State
                 id="birthCounty"
-                options={counties}
-                value={counties.find(county => county.value === birthCounty)}
-                onChange={(option) => setBirthCounty(option?.value || '')}
+                country={birthCountry}
+                value={birthCounty}
+                onChange={(value) => setBirthCounty(value)}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
@@ -168,11 +138,12 @@ const BirthChartReading: React.FC = () => {
             </div>
             <div className="mb-6">
               <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City:</label>
-              <Select
+              <City
                 id="birthCity"
-                options={cities}
-                value={cities.find(city => city.value === birthCity)}
-                onChange={(option) => setBirthCity(option?.value || '')}
+                country={birthCountry}
+                state={birthCounty}
+                value={birthCity}
+                onChange={(value) => setBirthCity(value)}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
