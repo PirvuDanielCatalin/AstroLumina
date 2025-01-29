@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 const BirthChartReading: React.FC = () => {
   const [birthDate, setBirthDate] = useState('');
@@ -110,6 +111,16 @@ const BirthChartReading: React.FC = () => {
         console.error('API request error:', error);
       }
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return format(date, 'dd MMMM yyyy');
+  };
+
+  const formatTime = (timeString: string) => {
+    const [hour, minute] = timeString.split(':');
+    return `${hour}:${minute}`;
   };
 
   return (
@@ -226,15 +237,11 @@ const BirthChartReading: React.FC = () => {
               <button className="w-full p-3 bg-amber-900 text-white rounded hover:bg-amber-700" type="submit">Get Reading</button>
             </form>
           ) : (
-            <div className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md">
-              <h3 className="text-2xl font-bold text-amber-900 mb-4">Reading Result</h3>
-              <p className="text-amber-700 mb-4"><strong>Full Name:</strong> {fullName}</p>
-              <p className="text-amber-700 mb-4"><strong>Birth Date:</strong> {birthDate}</p>
-              <p className="text-amber-700 mb-4"><strong>Birth Hour:</strong> {birthHour}</p>
-              <p className="text-amber-700 mb-4"><strong>Birth Country:</strong> {birthCountry}</p>
-              <p className="text-amber-700 mb-4"><strong>Birth County:</strong> {birthCounty}</p>
-              <p className="text-amber-700 mb-4"><strong>Birth City:</strong> {birthCity}</p>
-              <table className="w-full text-left border-collapse">
+            <div className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md text-center">
+              <h3 className="text-3xl font-bold text-amber-900 mb-4">{fullName}</h3>
+              <p className="text-amber-700 mb-4">{formatDate(birthDate)} at {formatTime(birthHour)}</p>
+              <p className="text-amber-700 mb-4">{birthCity}, {birthCounty}, {birthCountry}</p>
+              <table className="w-full text-left border-collapse mt-6">
                 <thead>
                   <tr>
                     <th className="border-b p-2">Planet</th>
