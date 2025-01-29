@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { useLoading } from './contexts/LoadingContext';
 import Dashboard from './components/Dashboard';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -268,6 +269,9 @@ function App() {
           <p> 2024 AstroLumina by Carmen Ilie. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTopButton />
     </div>
   );
 }
