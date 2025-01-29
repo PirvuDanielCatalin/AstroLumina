@@ -24,7 +24,10 @@ const BirthChartReading: React.FC = () => {
 
   useEffect(() => {
     if (birthCountry) {
-      const states = State.getStatesOfCountry(birthCountry).map(state => ({ value: state.isoCode, label: state.name }));
+      const states = State.getStatesOfCountry(birthCountry).map(state => ({
+        value: state.isoCode,
+        label: state.name.replace(/ County$/, '') // Remove 'County' from the label
+      }));
       setStateOptions(states);
       setBirthCounty('');
       setBirthCity('');
@@ -104,7 +107,7 @@ const BirthChartReading: React.FC = () => {
         <div className="w-full max-w-2xl bg-black/30 backdrop-blur-lg rounded-2xl p-12 shadow-xl border border-white/10">
           <form className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
             <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="fullName">Full Name:</label>
+              <label className="block text-amber-900 mb-2" htmlFor="fullName">Full Name</label>
               <input
                 type="text"
                 id="fullName"
@@ -116,7 +119,7 @@ const BirthChartReading: React.FC = () => {
               {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
             </div>
             <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date:</label>
+              <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date</label>
               <input
                 type="date"
                 id="birthDate"
@@ -128,7 +131,7 @@ const BirthChartReading: React.FC = () => {
               {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
             </div>
             <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour:</label>
+              <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour</label>
               <input
                 type="time"
                 id="birthHour"
@@ -140,31 +143,38 @@ const BirthChartReading: React.FC = () => {
               {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
             </div>
             <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country:</label>
+              <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country</label>
               <Select
                 id="birthCountry"
                 options={countryOptions}
                 value={countryOptions.find(option => option.value === birthCountry)}
-                onChange={(option) => setBirthCountry(option?.value || '')}
+                onChange={(option) => {
+                  setBirthCountry(option?.value || '');
+                  setBirthCounty('');
+                  setBirthCity('');
+                }}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
               {errors.birthCountry && <p className="text-red-500 text-sm mt-1">{errors.birthCountry}</p>}
             </div>
             <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County:</label>
+              <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County</label>
               <Select
                 id="birthCounty"
                 options={stateOptions}
                 value={stateOptions.find(option => option.value === birthCounty)}
-                onChange={(option) => setBirthCounty(option?.value || '')}
+                onChange={(option) => {
+                  setBirthCounty(option?.value || '');
+                  setBirthCity('');
+                }}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
               />
               {errors.birthCounty && <p className="text-red-500 text-sm mt-1">{errors.birthCounty}</p>}
             </div>
             <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City:</label>
+              <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City</label>
               <Select
                 id="birthCity"
                 options={cityOptions}
