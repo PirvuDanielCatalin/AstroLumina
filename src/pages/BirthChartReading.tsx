@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
 import axios from 'axios';
-import { format } from 'date-fns';
 
 const BirthChartReading: React.FC = () => {
   const [birthDate, setBirthDate] = useState('');
@@ -115,7 +114,7 @@ const BirthChartReading: React.FC = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return format(date, 'dd MMMM yyyy');
+    return `${date.getDate()} ${date.getMonth() + 1} ${date.getFullYear()}`;
   };
 
   const formatTime = (timeString: string) => {
