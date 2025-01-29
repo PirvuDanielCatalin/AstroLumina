@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
+import axios from 'axios';
 
 const BirthChartReading: React.FC = () => {
   const [birthDate, setBirthDate] = useState('');
@@ -81,11 +82,34 @@ const BirthChartReading: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateInputs()) {
-      // Handle form submission logic here
-      console.log({ birthDate, birthHour, birthCountry, birthCounty, birthCity, fullName, coordinates });
+    if (validateInputs() && coordinates) {
+      const [year, month, day] = birthDate.split('-').map(Number);
+      const [hour, minute] = birthHour.split(':').map(Number);
+
+      const payload = {
+        longitude: coordinates.lng,
+        latitude: coordinates.lat,
+        year,
+        month,
+        day,
+        hour,
+        minute,
+      };
+
+      try {
+        const response = await axios.post('https://api.astromagia.ro/api/v1/calc', payload, {
+          headers: {
+            'x-api-key': 'a856eb80c8be5ab0221f42b6595f70fd',
+          },
+        });
+        console.log('API response:', response.data);
+        // Handle the response data as needed
+      } catch (error) {
+        console.error('API request error:', error);
+        // Handle the error as needed
+      }
     }
   };
 
