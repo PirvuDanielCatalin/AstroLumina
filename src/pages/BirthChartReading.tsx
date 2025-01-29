@@ -122,6 +122,21 @@ const BirthChartReading: React.FC = () => {
     return `${hour}:${minute}`;
   };
 
+  const calculateSouthNode = (northNodeSign: string, northNodeHouse: string) => {
+    const signs = [
+      'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+      'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+    ];
+    const northNodeSignIndex = signs.indexOf(northNodeSign);
+    const southNodeSignIndex = (northNodeSignIndex + 6) % 12;
+    
+    const houses = ['House 1', 'House 2', 'House 3', 'House 4', 'House 5', 'House 6', 'House 7', 'House 8', 'House 9', 'House 10', 'House 11', 'House 12'];
+    const northNodeHouseIndex = houses.indexOf(northNodeHouse);
+    const southNodeHouseIndex = (northNodeHouseIndex + 6) % 12;
+    
+    return { sign: signs[southNodeSignIndex], house: houses[southNodeHouseIndex] };
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Starry background */}
@@ -256,6 +271,23 @@ const BirthChartReading: React.FC = () => {
                       <td className="border-b p-2">{item.house}</td>
                     </tr>
                   ))}
+                  {readingResult.dynamicTexts.some((item: any) => item.planet === 'Nodul Nord') && (
+                    <tr>
+                      <td className="border-b p-2">Nodul Sud</td>
+                      <td className="border-b p-2">
+                        {calculateSouthNode(
+                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').sign,
+                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').house
+                        ).sign}
+                      </td>
+                      <td className="border-b p-2">
+                        {calculateSouthNode(
+                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').sign,
+                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').house
+                        ).house}
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
