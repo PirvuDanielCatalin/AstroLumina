@@ -15,6 +15,7 @@ const BirthChartReading: React.FC = () => {
   const [countryOptions, setCountryOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
   const [stateOptions, setStateOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
   const [cityOptions, setCityOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
+  const [coordinates, setCoordinates] = useState<{ lat: number, lng: number } | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +43,15 @@ const BirthChartReading: React.FC = () => {
       setBirthCity('');
     }
   }, [birthCounty]);
+
+  useEffect(() => {
+    if (birthCity) {
+      const cityData = City.getCitiesOfState(birthCountry, birthCounty).find(city => city.name === birthCity);
+      if (cityData) {
+        setCoordinates({ lat: cityData.latitude, lng: cityData.longitude });
+      }
+    }
+  }, [birthCity]);
 
   const validateInputs = () => {
     const newErrors: { [key: string]: string } = {};
@@ -75,7 +85,7 @@ const BirthChartReading: React.FC = () => {
     e.preventDefault();
     if (validateInputs()) {
       // Handle form submission logic here
-      console.log({ birthDate, birthHour, birthCountry, birthCounty, birthCity, fullName });
+      console.log({ birthDate, birthHour, birthCountry, birthCounty, birthCity, fullName, coordinates });
     }
   };
 
