@@ -17,6 +17,7 @@ const BirthChartReading: React.FC = () => {
   const [stateOptions, setStateOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
   const [cityOptions, setCityOptions] = useState<{ value: string, label: string }[]>([{ value: '', label: 'Select ...' }]);
   const [coordinates, setCoordinates] = useState<{ lat: number, lng: number } | null>(null);
+  const [readingResult, setReadingResult] = useState<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,11 +105,9 @@ const BirthChartReading: React.FC = () => {
             'x-api-key': 'a856eb80c8be5ab0221f42b6595f70fd',
           },
         });
-        console.log('API response:', response.data);
-        // Handle the response data as needed
+        setReadingResult(response.data);
       } catch (error) {
         console.error('API request error:', error);
-        // Handle the error as needed
       }
     }
   };
@@ -140,91 +139,121 @@ const BirthChartReading: React.FC = () => {
         </div>
 
         <div className="w-full max-w-2xl bg-black/30 backdrop-blur-lg rounded-2xl p-12 shadow-xl border border-white/10">
-          <form className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="fullName">Full Name</label>
-              <input
-                type="text"
-                id="fullName"
-                className="w-full p-3 border border-amber-100 rounded"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-              />
-              {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+          {!readingResult ? (
+            <form className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <label className="block text-amber-900 mb-2" htmlFor="fullName">Full Name</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  className="w-full p-3 border border-amber-100 rounded"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
+                {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+              </div>
+              <div className="mb-6">
+                <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date</label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  className="w-full p-3 border border-amber-100 rounded"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  required
+                />
+                {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
+              </div>
+              <div className="mb-6">
+                <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour</label>
+                <input
+                  type="time"
+                  id="birthHour"
+                  className="w-full p-3 border border-amber-100 rounded"
+                  value={birthHour}
+                  onChange={(e) => setBirthHour(e.target.value)}
+                  required
+                />
+                {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
+              </div>
+              <div className="mb-6">
+                <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country</label>
+                <Select
+                  id="birthCountry"
+                  options={countryOptions}
+                  value={countryOptions.find(option => option.value === birthCountry)}
+                  onChange={(option) => {
+                    setBirthCountry(option?.value || '');
+                    setBirthCounty('');
+                    setBirthCity('');
+                    setStateOptions([{ value: '', label: 'Select ...' }]);
+                    setCityOptions([{ value: '', label: 'Select ...' }]);
+                  }}
+                  className="w-full p-3 border border-amber-100 rounded"
+                  required
+                />
+                {errors.birthCountry && <p className="text-red-500 text-sm mt-1">{errors.birthCountry}</p>}
+              </div>
+              <div className="mb-6">
+                <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County</label>
+                <Select
+                  id="birthCounty"
+                  options={stateOptions}
+                  value={stateOptions.find(option => option.value === birthCounty)}
+                  onChange={(option) => {
+                    setBirthCounty(option?.value || '');
+                    setBirthCity('');
+                    setCityOptions([{ value: '', label: 'Select ...' }]);
+                  }}
+                  className="w-full p-3 border border-amber-100 rounded"
+                  required
+                />
+                {errors.birthCounty && <p className="text-red-500 text-sm mt-1">{errors.birthCounty}</p>}
+              </div>
+              <div className="mb-6">
+                <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City</label>
+                <Select
+                  id="birthCity"
+                  options={cityOptions}
+                  value={cityOptions.find(option => option.value === birthCity)}
+                  onChange={(option) => setBirthCity(option?.value || '')}
+                  className="w-full p-3 border border-amber-100 rounded"
+                  required
+                />
+                {errors.birthCity && <p className="text-red-500 text-sm mt-1">{errors.birthCity}</p>}
+              </div>
+              <button className="w-full p-3 bg-amber-900 text-white rounded hover:bg-amber-700" type="submit">Get Reading</button>
+            </form>
+          ) : (
+            <div className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md">
+              <h3 className="text-2xl font-bold text-amber-900 mb-4">Reading Result</h3>
+              <p className="text-amber-700 mb-4"><strong>Full Name:</strong> {fullName}</p>
+              <p className="text-amber-700 mb-4"><strong>Birth Date:</strong> {birthDate}</p>
+              <p className="text-amber-700 mb-4"><strong>Birth Hour:</strong> {birthHour}</p>
+              <p className="text-amber-700 mb-4"><strong>Birth Country:</strong> {birthCountry}</p>
+              <p className="text-amber-700 mb-4"><strong>Birth County:</strong> {birthCounty}</p>
+              <p className="text-amber-700 mb-4"><strong>Birth City:</strong> {birthCity}</p>
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr>
+                    <th className="border-b p-2">Planet</th>
+                    <th className="border-b p-2">Sign</th>
+                    <th className="border-b p-2">House</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {readingResult.dynamicTexts.map((item: any, index: number) => (
+                    <tr key={index}>
+                      <td className="border-b p-2">{item.planet}</td>
+                      <td className="border-b p-2">{item.sign}</td>
+                      <td className="border-b p-2">{item.house}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date</label>
-              <input
-                type="date"
-                id="birthDate"
-                className="w-full p-3 border border-amber-100 rounded"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-                required
-              />
-              {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
-            </div>
-            <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour</label>
-              <input
-                type="time"
-                id="birthHour"
-                className="w-full p-3 border border-amber-100 rounded"
-                value={birthHour}
-                onChange={(e) => setBirthHour(e.target.value)}
-                required
-              />
-              {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
-            </div>
-            <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country</label>
-              <Select
-                id="birthCountry"
-                options={countryOptions}
-                value={countryOptions.find(option => option.value === birthCountry)}
-                onChange={(option) => {
-                  setBirthCountry(option?.value || '');
-                  setBirthCounty('');
-                  setBirthCity('');
-                  setStateOptions([{ value: '', label: 'Select ...' }]);
-                  setCityOptions([{ value: '', label: 'Select ...' }]);
-                }}
-                className="w-full p-3 border border-amber-100 rounded"
-                required
-              />
-              {errors.birthCountry && <p className="text-red-500 text-sm mt-1">{errors.birthCountry}</p>}
-            </div>
-            <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County</label>
-              <Select
-                id="birthCounty"
-                options={stateOptions}
-                value={stateOptions.find(option => option.value === birthCounty)}
-                onChange={(option) => {
-                  setBirthCounty(option?.value || '');
-                  setBirthCity('');
-                  setCityOptions([{ value: '', label: 'Select ...' }]);
-                }}
-                className="w-full p-3 border border-amber-100 rounded"
-                required
-              />
-              {errors.birthCounty && <p className="text-red-500 text-sm mt-1">{errors.birthCounty}</p>}
-            </div>
-            <div className="mb-6">
-              <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City</label>
-              <Select
-                id="birthCity"
-                options={cityOptions}
-                value={cityOptions.find(option => option.value === birthCity)}
-                onChange={(option) => setBirthCity(option?.value || '')}
-                className="w-full p-3 border border-amber-100 rounded"
-                required
-              />
-              {errors.birthCity && <p className="text-red-500 text-sm mt-1">{errors.birthCity}</p>}
-            </div>
-            <button className="w-full p-3 bg-amber-900 text-white rounded hover:bg-amber-700" type="submit">Get Reading</button>
-          </form>
+          )}
         </div>
       </div>
     </div>
