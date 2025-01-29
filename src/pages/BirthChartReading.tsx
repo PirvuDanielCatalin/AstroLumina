@@ -152,6 +152,8 @@ const BirthChartReading: React.FC = () => {
                   setBirthCountry(option?.value || '');
                   setBirthCounty('');
                   setBirthCity('');
+                  setStateOptions([]);
+                  setCityOptions([]);
                 }}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
@@ -167,6 +169,7 @@ const BirthChartReading: React.FC = () => {
                 onChange={(option) => {
                   setBirthCounty(option?.value || '');
                   setBirthCity('');
+                  setCityOptions([]);
                 }}
                 className="w-full p-3 border border-amber-100 rounded"
                 required
