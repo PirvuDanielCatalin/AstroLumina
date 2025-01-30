@@ -188,7 +188,8 @@ const BirthChartReading: React.FC = () => {
                   dateFormat="DD/MM/YYYY"
                   timeFormat={false}
                   className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  inputProps={{ placeholder: 'Select ...' }}
+                  inputProps={{ placeholder: 'Select ...', onBlur: (e) => setBirthDate(moment(e.target.value, 'DD/MM/YYYY')) }}
+                  closeOnSelect
                   required
                 />
                 {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
@@ -201,7 +202,8 @@ const BirthChartReading: React.FC = () => {
                   dateFormat={false}
                   timeFormat="HH:mm"
                   className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  inputProps={{ placeholder: 'Select ...' }}
+                  inputProps={{ placeholder: 'Select ...', onBlur: (e) => setBirthHour(moment(e.target.value, 'HH:mm')) }}
+                  closeOnSelect
                   required
                 />
                 {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
