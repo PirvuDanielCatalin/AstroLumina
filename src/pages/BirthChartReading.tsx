@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
 import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const BirthChartReading: React.FC = () => {
-  const [birthDate, setBirthDate] = useState('');
-  const [birthHour, setBirthHour] = useState('');
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [birthHour, setBirthHour] = useState<Date | null>(null);
   const [birthCountry, setBirthCountry] = useState('');
   const [birthCounty, setBirthCounty] = useState('');
   const [birthCity, setBirthCity] = useState('');
@@ -57,17 +59,15 @@ const BirthChartReading: React.FC = () => {
 
   const validateInputs = () => {
     const newErrors: { [key: string]: string } = {};
-    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-    const timePattern = /^\d{2}:\d{2}$/;
 
     if (!fullName.trim()) {
       newErrors.fullName = 'Full Name is required';
     }
-    if (!birthDate.match(datePattern)) {
-      newErrors.birthDate = 'Birth Date must be in yyyy-mm-dd format';
+    if (!birthDate) {
+      newErrors.birthDate = 'Birth Date is required';
     }
-    if (!birthHour.match(timePattern)) {
-      newErrors.birthHour = 'Birth Hour must be in hh:mm format';
+    if (!birthHour) {
+      newErrors.birthHour = 'Birth Hour is required';
     }
     if (!birthCountry) {
       newErrors.birthCountry = 'Birth Country is required';
@@ -85,9 +85,12 @@ const BirthChartReading: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateInputs() && coordinates) {
-      const [year, month, day] = birthDate.split('-').map(Number);
-      const [hour, minute] = birthHour.split(':').map(Number);
+    if (validateInputs() && coordinates && birthDate && birthHour) {
+      const year = birthDate.getFullYear();
+      const month = birthDate.getMonth() + 1;
+      const day = birthDate.getDate();
+      const hour = birthHour.getHours();
+      const minute = birthHour.getMinutes();
 
       const payload = {
         longitude: coordinates.lng,
@@ -112,14 +115,12 @@ const BirthChartReading: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (date: Date) => {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
-  const formatTime = (timeString: string) => {
-    const [hour, minute] = timeString.split(':');
-    return `${hour}:${minute}`;
+  const formatTime = (date: Date) => {
+    return `${date.getHours()}:${date.getMinutes()}`;
   };
 
   const calculateSouthNode = (northNodeSign: string, northNodeHouse: string) => {
@@ -180,24 +181,26 @@ const BirthChartReading: React.FC = () => {
               </div>
               <div className="mb-6">
                 <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date</label>
-                <input
-                  type="date"
-                  id="birthDate"
-                  className="w-full p-3 border border-amber-100 rounded"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
+                <DatePicker
+                  selected={birthDate}
+                  onChange={(date) => setBirthDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                   required
                 />
                 {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
               </div>
               <div className="mb-6">
                 <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour</label>
-                <input
-                  type="time"
-                  id="birthHour"
-                  className="w-full p-3 border border-amber-100 rounded"
-                  value={birthHour}
-                  onChange={(e) => setBirthHour(e.target.value)}
+                <DatePicker
+                  selected={birthHour}
+                  onChange={(date) => setBirthHour(date)}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={15}
+                  timeCaption="Time"
+                  dateFormat="HH:mm"
+                  className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                   required
                 />
                 {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
@@ -253,43 +256,45 @@ const BirthChartReading: React.FC = () => {
           ) : (
             <div className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md text-center">
               <h3 className="text-3xl font-bold text-amber-900 mb-4">{fullName}</h3>
-              <p className="text-amber-700 mb-4">{formatDate(birthDate)} at {formatTime(birthHour)}</p>
+              <p className="text-amber-700 mb-4">{birthDate && formatDate(birthDate)} at {birthHour && formatTime(birthHour)}</p>
               <p className="text-amber-700 mb-4">{birthCity}, {birthCounty}, {birthCountry}</p>
-              <table className="w-full text-left border-collapse mt-6">
-                <thead>
-                  <tr>
-                    <th className="border-b p-2">Planet</th>
-                    <th className="border-b p-2">Sign</th>
-                    <th className="border-b p-2">House</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {readingResult.dynamicTexts.map((item: any, index: number) => (
-                    <tr key={index}>
-                      <td className="border-b p-2">{item.planet}</td>
-                      <td className="border-b p-2">{item.sign}</td>
-                      <td className="border-b p-2">{item.house}</td>
-                    </tr>
-                  ))}
-                  {readingResult.dynamicTexts.some((item: any) => item.planet === 'Nodul Nord') && (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse mt-6">
+                  <thead>
                     <tr>
-                      <td className="border-b p-2">Nodul Sud</td>
-                      <td className="border-b p-2">
-                        {calculateSouthNode(
-                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').sign,
-                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').house
-                        ).sign}
-                      </td>
-                      <td className="border-b p-2">
-                        {calculateSouthNode(
-                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').sign,
-                          readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').house
-                        ).house}
-                      </td>
+                      <th className="border-b p-2">Planet</th>
+                      <th className="border-b p-2">Sign</th>
+                      <th className="border-b p-2">House</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {readingResult.dynamicTexts.map((item: any, index: number) => (
+                      <tr key={index}>
+                        <td className="border-b p-2">{item.planet}</td>
+                        <td className="border-b p-2">{item.sign}</td>
+                        <td className="border-b p-2">{item.house}</td>
+                      </tr>
+                    ))}
+                    {readingResult.dynamicTexts.some((item: any) => item.planet === 'Nodul Nord') && (
+                      <tr>
+                        <td className="border-b p-2">Nodul Sud</td>
+                        <td className="border-b p-2">
+                          {calculateSouthNode(
+                            readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').sign,
+                            readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').house
+                          ).sign}
+                        </td>
+                        <td className="border-b p-2">
+                          {calculateSouthNode(
+                            readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').sign,
+                            readingResult.dynamicTexts.find((item: any) => item.planet === 'Nodul Nord').house
+                          ).house}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
