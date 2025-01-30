@@ -206,6 +206,7 @@ const BirthChartReading: React.FC = () => {
                     dateFormat: "H:i",
                     time_24hr: true,
                     allowInput: true,
+                    minuteIncrement: 1,
                     onClose: (selectedDates) => setBirthHour(selectedDates[0]),
                   }}
                   className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
