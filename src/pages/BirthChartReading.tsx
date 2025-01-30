@@ -4,13 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
 import axios from 'axios';
-import Datetime from 'react-datetime';
-import 'react-datetime/css/react-datetime.css';
-import moment from 'moment';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/material_blue.css';
 
 const BirthChartReading: React.FC = () => {
-  const [birthDate, setBirthDate] = useState<moment.Moment | null>(null);
-  const [birthHour, setBirthHour] = useState<moment.Moment | null>(null);
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [birthHour, setBirthHour] = useState<Date | null>(null);
   const [birthCountry, setBirthCountry] = useState('');
   const [birthCounty, setBirthCounty] = useState('');
   const [birthCity, setBirthCity] = useState('');
@@ -87,11 +86,11 @@ const BirthChartReading: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateInputs() && coordinates && birthDate && birthHour) {
-      const year = birthDate.year();
-      const month = birthDate.month() + 1;
-      const day = birthDate.date();
-      const hour = birthHour.hour();
-      const minute = birthHour.minute();
+      const year = birthDate.getFullYear();
+      const month = birthDate.getMonth() + 1;
+      const day = birthDate.getDate();
+      const hour = birthHour.getHours();
+      const minute = birthHour.getMinutes();
 
       const payload = {
         longitude: coordinates.lng,
@@ -116,12 +115,12 @@ const BirthChartReading: React.FC = () => {
     }
   };
 
-  const formatDate = (date: moment.Moment) => {
-    return date.format('DD/MM/YYYY');
+  const formatDate = (date: Date) => {
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
-  const formatTime = (date: moment.Moment) => {
-    return date.format('HH:mm');
+  const formatTime = (date: Date) => {
+    return `${date.getHours()}:${date.getMinutes()}`;
   };
 
   const calculateSouthNode = (northNodeSign: string, northNodeHouse: string) => {
@@ -182,28 +181,35 @@ const BirthChartReading: React.FC = () => {
               </div>
               <div className="mb-6">
                 <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date</label>
-                <Datetime
+                <Flatpickr
                   value={birthDate}
-                  onChange={(date) => setBirthDate(moment(date))}
-                  dateFormat="DD/MM/YYYY"
-                  timeFormat={false}
+                  onChange={(date) => setBirthDate(date[0])}
+                  options={{
+                    dateFormat: "d/m/Y",
+                    allowInput: true,
+                    onClose: (selectedDates) => setBirthDate(selectedDates[0]),
+                  }}
                   className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  inputProps={{ placeholder: 'Select ...', onBlur: (e) => setBirthDate(moment(e.target.value, 'DD/MM/YYYY')) }}
-                  closeOnSelect
+                  placeholder="Select ..."
                   required
                 />
                 {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
               </div>
               <div className="mb-6">
                 <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour</label>
-                <Datetime
+                <Flatpickr
                   value={birthHour}
-                  onChange={(date) => setBirthHour(moment(date))}
-                  dateFormat={false}
-                  timeFormat="HH:mm"
+                  onChange={(date) => setBirthHour(date[0])}
+                  options={{
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    allowInput: true,
+                    onClose: (selectedDates) => setBirthHour(selectedDates[0]),
+                  }}
                   className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  inputProps={{ placeholder: 'Select ...', onBlur: (e) => setBirthHour(moment(e.target.value, 'HH:mm')) }}
-                  closeOnSelect
+                  placeholder="Select ..."
                   required
                 />
                 {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
