@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, ChevronRight, Menu, X, User, LogOut, Settings } from 'lucide-react';
+import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, ChevronRight, Menu, X, User, LogOut, Settings, Earth } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { useLoading } from './contexts/LoadingContext';
 import Dashboard from './components/Dashboard';
 import ScrollToTopButton from './components/ScrollToTopButton';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -13,6 +15,7 @@ function App() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { stopLoading } = useLoading();
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Simulate initial loading
@@ -50,6 +53,8 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
+      <LanguageSwitcher />
+      <h1>{t('welcome')}</h1>
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-6">
@@ -147,23 +152,41 @@ function App() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 {
-                  icon: <Moon className="w-8 h-8" />,
-                  title: "Birth Chart Reading",
-                  price: "$149",
+                  icon: <Earth className="w-8 h-8" />,
+                  title: "Planet Positions",
+                  price: "Free",
                   description: "Deep dive into your natal chart revealing your life's purpose and potential.",
-                  link: "/birth-chart-reading" // Add a link to the BirthChartReading page
+                  link: "/planet-positions"
                 },
                 {
                   icon: <Sun className="w-8 h-8" />,
-                  title: "Solar Return Reading",
-                  price: "$99",
+                  title: "Astral Chart",
+                  price: "$50",
                   description: "Discover what the coming year holds for you based on your solar return chart.",
                 },
                 {
                   icon: <Sparkles className="w-8 h-8" />,
-                  title: "Relationship Compatibility",
-                  price: "$199",
+                  title: "Karmic Chart",
+                  price: "$60",
                   description: "Understanding the cosmic connection between you and your partner.",
+                },
+                {
+                  icon: <Sparkles className="w-8 h-8" />,
+                  title: "Relationship Chart",
+                  price: "$60",
+                  description: "Understanding the cosmic connection between you and your partner.",
+                },
+                {
+                  icon: <Sparkles className="w-8 h-8" />,
+                  title: "Future Chart",
+                  price: "$60",
+                  description: "Understanding the cosmic connection between you and your partner.",
+                },
+                {
+                  icon: <Moon className="w-8 h-8" />,
+                  title: "Consultatii 1:1",
+                  price: "$50",
+                  description: "Discover what the coming year holds for you based on your solar return chart.",
                 },
               ].map((service, index) => (
                 <div key={index} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">

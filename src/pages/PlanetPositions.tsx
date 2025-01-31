@@ -7,7 +7,7 @@ import axios from 'axios';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/material_blue.css';
 
-const BirthChartReading: React.FC = () => {
+const PlanetPositions: React.FC = () => {
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [birthHour, setBirthHour] = useState<Date | null>(null);
   const [birthCountry, setBirthCountry] = useState('');
@@ -313,4 +313,4 @@ const BirthChartReading: React.FC = () => {
   );
 };
 
-export default BirthChartReading;
+export default PlanetPositions;
