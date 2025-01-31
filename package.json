@@ -28,7 +28,8 @@
     "flatpickr": "^4.6.13",
     "react-flatpickr": "^3.10.13",
     "react-i18next": "^11.8.5",
-    "i18next": "^19.8.4"
+    "i18next": "^19.8.4",
+    "react-country-flag": "^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

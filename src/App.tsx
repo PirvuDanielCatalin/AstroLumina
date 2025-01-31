@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, ChevronRight, Menu, X, User, LogOut, Settings, Earth } from 'lucide-react';
+import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, Earth } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { useLoading } from './contexts/LoadingContext';
@@ -75,12 +75,6 @@ function App() {
                   <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('services')}</a>
                   <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('about')}</a>
                   <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('contact')}</a>
-                  {/* <Link
-                    to="/login"
-                    className="bg-yellow-400 text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/25 ml-4"
-                  >
-                    Sign In
-                  </Link> */}
                   <LanguageSwitcher />
                 </div>
               </div>
@@ -147,43 +141,43 @@ function App() {
         {/* Services Section */}
         <section id="services" className="py-20 bg-amber-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-amber-900 text-center mb-12">Our Services</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-amber-900 text-center mb-12">{t('services')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 {
                   icon: <Earth className="w-8 h-8" />,
-                  title: "Planet Positions",
+                  title: t('services-list.planet-positions'),
                   price: "Free",
                   description: "Deep dive into your natal chart revealing your life's purpose and potential.",
                   link: "/planet-positions"
                 },
                 {
                   icon: <Sun className="w-8 h-8" />,
-                  title: "Astral Chart",
+                  title: t('services-list.astral-chart'),
                   price: "$50",
                   description: "Discover what the coming year holds for you based on your solar return chart.",
                 },
                 {
                   icon: <Sparkles className="w-8 h-8" />,
-                  title: "Karmic Chart",
+                  title: t('services-list.karmic-chart'),
                   price: "$60",
                   description: "Understanding the cosmic connection between you and your partner.",
                 },
                 {
                   icon: <Sparkles className="w-8 h-8" />,
-                  title: "Relationship Chart",
+                  title: t('services-list.relationship-chart'),
                   price: "$60",
                   description: "Understanding the cosmic connection between you and your partner.",
                 },
                 {
                   icon: <Sparkles className="w-8 h-8" />,
-                  title: "Future Chart",
+                  title: t('services-list.future-chart'),
                   price: "$60",
                   description: "Understanding the cosmic connection between you and your partner.",
                 },
                 {
                   icon: <Moon className="w-8 h-8" />,
-                  title: "Consultatii 1:1",
+                  title: t('services-list.consultations'),
                   price: "$50",
                   description: "Discover what the coming year holds for you based on your solar return chart.",
                 },
@@ -194,7 +188,7 @@ function App() {
                   <p className="text-amber-700">{service.description}</p>
                   {service.link && (
                     <Link to={service.link} className="text-amber-500 hover:text-amber-700 transition-colors">
-                      Learn More
+                      {t('learn-more')}
                     </Link>
                   )}
                 </div>
@@ -243,7 +237,7 @@ function App() {
         {/* Contact Section */}
         <section id="contact" className="py-20 bg-amber-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-amber-900 text-center mb-12">Get in Touch</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-amber-900 text-center mb-12">{t('contact')}</h2>
             <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
               <form className="space-y-6">
                 <div>
