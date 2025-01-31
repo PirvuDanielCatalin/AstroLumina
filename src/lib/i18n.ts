@@ -4,14 +4,18 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      "welcome": "Welcome to AstroLumina",
-      // ...other translations...
+      "hero-presentation": "Unlock the secrets of your destiny through the ancient wisdom of the stars",
+      "services": "Services",
+      "about": "About",
+      "contact": "Contact",
     }
   },
   ro: {
     translation: {
-      "welcome": "Bine ați venit la AstroLumina",
-      // ...other translations...
+      "hero-presentation": "Deblocheaza secretele propriului destin prin intelepciunea straveche a stelelor",
+      "services": "Servicii",
+      "about": "Despre mine",
+      "contact": "Contact",
     }
   }
 };

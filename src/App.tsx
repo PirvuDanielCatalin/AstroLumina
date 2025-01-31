@@ -53,8 +53,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
-      <LanguageSwitcher />
-      <h1>{t('welcome')}</h1>
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-6">
@@ -74,15 +72,16 @@ function App() {
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                  <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">Services</a>
-                  <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">About</a>
-                  <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">Contact</a>
+                  <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('services')}</a>
+                  <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('about')}</a>
+                  <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('contact')}</a>
                   {/* <Link
                     to="/login"
                     className="bg-yellow-400 text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-yellow-300 transition-all shadow-lg hover:shadow-yellow-400/25 ml-4"
                   >
                     Sign In
                   </Link> */}
+                  <LanguageSwitcher />
                 </div>
               </div>
             </div>
@@ -121,7 +120,7 @@ function App() {
             <span className="text-3xl md:text-5xl text-yellow-200">by Carmen Ilie</span>
           </h1>
           <p className="text-xl md:text-2xl text-yellow-100/90 mb-12 max-w-3xl mx-auto">
-            Unlock the secrets of your destiny through the ancient wisdom of the stars
+            {t('hero-presentation')}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button 
