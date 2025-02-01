@@ -6,41 +6,14 @@ import axios from 'axios';
 import 'flatpickr/dist/themes/material_blue.css';
 import Flatpickr from 'react-flatpickr';
 import { useLoading } from '../contexts/LoadingContext';
-
-// Types
-interface LocationCoordinates {
-  lat: number;
-  lng: number;
-}
-
-interface FormErrors {
-  [key: string]: string;
-}
-
-interface SelectOption {
-  value: string;
-  label: string;
-}
-
-interface ReadingPayload {
-  longitude: number;
-  latitude: number;
-  year: number;
-  month: number;
-  day: number;
-  hour: number;
-  minute: number;
-}
-
-interface PlanetPosition {
-  planet: string;
-  sign: string;
-  house: string;
-}
-
-interface ReadingResult {
-  dynamicTexts: PlanetPosition[];
-}
+import { 
+  LocationCoordinates,
+  FormErrors,
+  SelectOption,
+  ReadingPayload,
+  PlanetPosition,
+  ReadingResult 
+} from '../types/planetPositions';
 
 // API Service
 const API_KEY = 'a856eb80c8be5ab0221f42b6595f70fd';
@@ -95,10 +68,8 @@ const calculateSouthNode = (northNodeSign: string, northNodeHouse: string) => {
 
 // Form Component
 const BirthDataForm: React.FC<{
-  onSubmit: (data: ReadingPayload, userInfo: { name: string, city: string, country: string }) => void;
+  onSubmit: (payload: ReadingPayload, displayData: { name: string; location: string }) => void;
 }> = ({ onSubmit }) => {
-  console.log('BirthDataForm rendering');
-  
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [birthHour, setBirthHour] = useState<Date | null>(null);
   const [birthCountry, setBirthCountry] = useState('');
@@ -125,7 +96,7 @@ const BirthDataForm: React.FC<{
     if (birthCountry) {
       const states = State.getStatesOfCountry(birthCountry).map(state => ({
         value: state.isoCode,
-        label: state.name.replace(/ County$| Province$/, '')
+        label: state.name.replace(/ County$| Province$| District$/, '')
       }));
       setStateOptions([{ value: '', label: 'Select ...' }, ...states]);
       setBirthCounty('');
@@ -175,6 +146,7 @@ const BirthDataForm: React.FC<{
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateInputs() && coordinates && birthDate && birthHour) {
+      // API payload with just the required fields
       const payload: ReadingPayload = {
         longitude: coordinates.lng,
         latitude: coordinates.lat,
@@ -182,13 +154,23 @@ const BirthDataForm: React.FC<{
         month: birthDate.getMonth() + 1,
         day: birthDate.getDate(),
         hour: birthHour.getHours(),
-        minute: birthHour.getMinutes(),
+        minute: birthHour.getMinutes()
       };
-      onSubmit(payload, {
-        name: fullName,
-        city: birthCity,
-        country: birthCountry
-      });
+      
+      // Get the actual location names for display
+      const country = Country.getCountryByCode(birthCountry)?.name || birthCountry;
+      const state = State.getStateByCodeAndCountry(birthCounty, birthCountry)?.name || birthCounty;
+      const cities = City.getCitiesOfState(birthCountry, birthCounty);
+      const city = cities.find(c => c.name === birthCity)?.name || birthCity;
+      
+      // Pass both the API payload and display data separately
+      onSubmit(
+        payload,
+        {
+          name: fullName,
+          location: `${city}, ${state}, ${country}`
+        }
+      );
     }
   };
 
@@ -358,131 +340,133 @@ const ReadingResults: React.FC<{
     location: string;
   };
 }> = ({ result, userInfo }) => {
-  console.log('Rendering results with:', result);
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md text-center">
-      <h3 className="text-3xl font-bold text-amber-900 mb-4">{userInfo.name}</h3>
-      <p className="text-amber-700 mb-4">
-        {formatDate(userInfo.birthDate)} at {formatTime(userInfo.birthHour)}
-      </p>
-      <p className="text-amber-700 mb-4">{userInfo.location}</p>
-      
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse mt-6">
-          <thead>
-            <tr className="bg-amber-50">
-              <th className="p-3 font-medium text-amber-900">Planet</th>
-              <th className="p-3 font-medium text-amber-900">Sign</th>
-              <th className="p-3 font-medium text-amber-900">House</th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.dynamicTexts?.map((position, index) => {
-              console.log('Rendering position:', position);
-              return (
+    <div className="max-w-2xl mx-auto mt-2 text-center">
+      <div className="mb-6">
+        <h3 className="text-2xl font-bold text-amber-900 mb-2">{userInfo.name}</h3>
+        <p className="text-lg text-amber-700">
+          {formatDate(userInfo.birthDate)} at {formatTime(userInfo.birthHour)}
+        </p>
+        <p className="text-lg text-amber-700 mb-4">{userInfo.location}</p>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h4 className="text-xl font-semibold text-amber-900 mb-4">Planetary Positions</h4>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-amber-50">
+                <th className="p-3 font-medium text-amber-900">Planet</th>
+                <th className="p-3 font-medium text-amber-900">Sign</th>
+                <th className="p-3 font-medium text-amber-900">House</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.dynamicTexts?.map((position, index) => (
                 <tr key={index} className="border-b border-amber-100">
                   <td className="p-3 text-amber-700">{position.planet}</td>
                   <td className="p-3 text-amber-700">{position.sign}</td>
                   <td className="p-3 text-amber-700">{position.house}</td>
                 </tr>
-              );
-            })}
-            {result.dynamicTexts.some(item => item.planet === 'Nodul Nord') && (
-              <tr className="border-b border-amber-100">
-                <td className="p-3 text-amber-700">Nodul Sud</td>
-                <td className="p-3 text-amber-700">
-                  {calculateSouthNode(
-                    result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.sign,
-                    result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.house
-                  ).sign}
-                </td>
-                <td className="p-3 text-amber-700">
-                  {calculateSouthNode(
-                    result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.sign,
-                    result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.house
-                  ).house}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ))}
+              {result.dynamicTexts.some(item => item.planet === 'Nodul Nord') && (
+                <tr className="border-b border-amber-100">
+                  <td className="p-3 text-amber-700">Nodul Sud</td>
+                  <td className="p-3 text-amber-700">
+                    {calculateSouthNode(
+                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.sign,
+                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.house
+                    ).sign}
+                  </td>
+                  <td className="p-3 text-amber-700">
+                    {calculateSouthNode(
+                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.sign,
+                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.house
+                    ).house}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
 };
 
 // Main Component
-const PlanetPositions: React.FC = () => {
-  const { stopLoading } = useLoading();
-  const [readingResult, setReadingResult] = useState<ReadingResult | null>(null);
+const PlanetPositions = () => {
+  const [result, setResult] = useState<ReadingResult | null>(null);
   const [userInfo, setUserInfo] = useState<{
     name: string;
     birthDate: Date;
     birthHour: Date;
     location: string;
   } | null>(null);
+  const { startLoading, stopLoading } = useLoading();
 
-  useEffect(() => {
-    // Stop loading when component mounts
-    stopLoading();
-  }, [stopLoading]);
-
-  useEffect(() => {
-    console.log('PlanetPositions mounted');
-    console.log('readingResult:', readingResult);
-    console.log('userInfo:', userInfo);
-  }, [readingResult, userInfo]);
-
-  const handleFormSubmit = async (payload: ReadingPayload, userFormInfo: { name: string, city: string, country: string }) => {
-    console.log('Form submitted with payload:', payload);
+  const handleSubmit = async (
+    payload: ReadingPayload,
+    displayData: { name: string; location: string }
+  ) => {
+    startLoading();
     try {
-      const result = await fetchReading(payload);
-      setReadingResult(result);
-      
-      // Set user info with the form data
-      const birthDate = new Date(payload.year, payload.month - 1, payload.day);
-      const birthHour = new Date(payload.year, payload.month - 1, payload.day, payload.hour, payload.minute);
+      const readingResult = await fetchReading(payload);
+      setResult(readingResult);
       setUserInfo({
-        name: userFormInfo.name,
-        birthDate,
-        birthHour,
-        location: `${userFormInfo.city}, ${userFormInfo.country}`
+        name: displayData.name,
+        birthDate: new Date(payload.year, payload.month - 1, payload.day),
+        birthHour: new Date(payload.year, payload.month - 1, payload.day, payload.hour, payload.minute),
+        location: displayData.location
       });
     } catch (error) {
-      console.error('Failed to get reading:', error);
-      // Here you could add a toast notification or other error UI
+      console.error('Error fetching reading:', error);
+      setResult(null);
+      setUserInfo(null);
+    } finally {
+      stopLoading();
     }
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Starry background */}
-      <div className="absolute inset-0 stars">
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30"></div>
-      </div>
-
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
-        {/* Logo and Title */}
-        <div className="mb-8 text-center">
-          <div className="flex justify-center mb-4">
-            <Star className="w-12 h-12 text-yellow-200" />
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div className="flex flex-col md:flex-row">
+            {/* Left Panel - Service Description */}
+            <div className="md:w-1/2 p-8 bg-gradient-to-br from-purple-50 to-indigo-50">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Discover Your Celestial Blueprint
+              </h2>
+              <div className="mb-8">
+                <img
+                  src="/src/assets/astral-chart.svg"
+                  alt="Astral Chart"
+                  className="w-full max-w-md mx-auto mb-6"
+                />
+              </div>
+              <div className="prose prose-indigo">
+                <p className="text-lg text-gray-600 mb-4">
+                  Unlock the secrets of the cosmos and gain deep insights into your astrological profile. Our advanced planetary position calculator provides precise astronomical data to help you understand the celestial influences at any given moment.
+                </p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Accurate planetary positions</li>
+                  <li>Detailed house placements</li>
+                  <li>Zodiac sign interpretations</li>
+                  <li>Real-time astronomical calculations</li>
+                </ul>
+              </div>
+            </div>
+            
+            {/* Right Panel - Form or Results */}
+            <div className="md:w-1/2 p-8">
+              {!result || !userInfo ? (
+                <BirthDataForm onSubmit={handleSubmit} />
+              ) : (
+                <ReadingResults result={result} userInfo={userInfo} />
+              )}
+            </div>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Planet Positions
-          </h2>
-        </div>
-
-        <div className="w-full max-w-2xl bg-white/80 backdrop-blur-lg rounded-2xl p-12 shadow-xl">
-          {!readingResult ? (
-            <BirthDataForm onSubmit={handleFormSubmit} />
-          ) : userInfo && (
-            <ReadingResults result={readingResult} userInfo={userInfo} />
-          )}
         </div>
       </div>
     </div>
