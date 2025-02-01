@@ -15,6 +15,7 @@ import {
   ReadingResult 
 } from '../types/planetPositions';
 import { planetSymbols, planetOrder } from '../constants/astrology';
+import astralChartSvg from '../assets/astral-chart.svg';
 
 // API Service
 const API_KEY = 'a856eb80c8be5ab0221f42b6595f70fd';
@@ -460,7 +461,7 @@ const PlanetPositions = () => {
               </h2>
               <div className="mb-8">
                 <img
-                  src="/src/assets/astral-chart.svg"
+                  src={astralChartSvg}
                   alt="Astral Chart"
                   className="w-full max-w-md mx-auto mb-6"
                 />
