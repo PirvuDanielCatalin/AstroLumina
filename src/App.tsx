@@ -3,6 +3,7 @@ import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, Earth } from 'lucide-r
 import { useLoading } from './contexts/LoadingContext';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -60,6 +61,7 @@ function App() {
                   <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('services')}</a>
                   <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('about')}</a>
                   <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('contact')}</a>
+                  <LanguageSwitcher />
                 </div>
               </div>
             </div>
