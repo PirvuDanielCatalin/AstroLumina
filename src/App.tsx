@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, Earth } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
 import { useLoading } from './contexts/LoadingContext';
-import Dashboard from './components/Dashboard';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from './components/LanguageSwitcher';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const navigate = useNavigate();
-  const { user, signOut } = useAuth();
   const { stopLoading } = useLoading();
   const { t } = useTranslation();
 
@@ -42,15 +36,6 @@ function App() {
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
       {/* Navigation */}
@@ -75,7 +60,6 @@ function App() {
                   <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('services')}</a>
                   <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('about')}</a>
                   <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('contact')}</a>
-                  <LanguageSwitcher />
                 </div>
               </div>
             </div>
@@ -187,9 +171,12 @@ function App() {
                   <h3 className="text-xl font-bold text-amber-900 mb-2">{service.title}</h3>
                   <p className="text-amber-700">{service.description}</p>
                   {service.link && (
-                    <Link to={service.link} className="text-amber-500 hover:text-amber-700 transition-colors">
+                    <a
+                      href={service.link}
+                      className="text-amber-500 hover:text-amber-700 transition-colors"
+                    >
                       {t('learn-more')}
-                    </Link>
+                    </a>
                   )}
                 </div>
               ))}
