@@ -6,8 +6,16 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    open: true
   },
+  preview: {
+    port: 5173,
+    open: true
+  },
+  base: '/',
   build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {

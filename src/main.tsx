@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App.tsx';
 import PlanetPositions from './pages/PlanetPositions.tsx';
 import './styles/starry-theme.css';
+import 'flatpickr/dist/themes/material_blue.css';
 import { LoadingProvider } from './contexts/LoadingContext';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './lib/i18n';

@@ -3,8 +3,9 @@ import { Star } from 'lucide-react';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
 import axios from 'axios';
-import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/material_blue.css';
+import Flatpickr from 'react-flatpickr';
+import { useLoading } from '../contexts/LoadingContext';
 
 // Types
 interface LocationCoordinates {
@@ -96,6 +97,8 @@ const calculateSouthNode = (northNodeSign: string, northNodeHouse: string) => {
 const BirthDataForm: React.FC<{
   onSubmit: (data: ReadingPayload, userInfo: { name: string, city: string, country: string }) => void;
 }> = ({ onSubmit }) => {
+  console.log('BirthDataForm rendering');
+  
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [birthHour, setBirthHour] = useState<Date | null>(null);
   const [birthCountry, setBirthCountry] = useState('');
@@ -190,13 +193,13 @@ const BirthDataForm: React.FC<{
   };
 
   return (
-    <form className="max-w-2xl mx-auto mt-8 p-6 border border-amber-100 rounded bg-white shadow-md" onSubmit={handleSubmit}>
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="mb-6">
-        <label className="block text-amber-900 mb-2" htmlFor="fullName">Full Name</label>
+        <label className="block text-gray-800 mb-2" htmlFor="fullName">Full Name</label>
         <input
           type="text"
           id="fullName"
-          className="w-full p-3 border border-amber-100 rounded"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           required
@@ -205,7 +208,7 @@ const BirthDataForm: React.FC<{
       </div>
       
       <div className="mb-6">
-        <label className="block text-amber-900 mb-2" htmlFor="birthDate">Birth Date</label>
+        <label className="block text-gray-800 mb-2" htmlFor="birthDate">Birth Date</label>
         <Flatpickr
           value={birthDate}
           onChange={(date) => setBirthDate(date[0])}
@@ -214,15 +217,15 @@ const BirthDataForm: React.FC<{
             allowInput: true,
             onClose: (selectedDates) => setBirthDate(selectedDates[0]),
           }}
-          className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
-          placeholder="Select ..."
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="Select date..."
           required
         />
         {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
       </div>
 
       <div className="mb-6">
-        <label className="block text-amber-900 mb-2" htmlFor="birthHour">Birth Hour</label>
+        <label className="block text-gray-800 mb-2" htmlFor="birthHour">Birth Hour</label>
         <Flatpickr
           value={birthHour}
           onChange={(date) => setBirthHour(date[0])}
@@ -235,15 +238,15 @@ const BirthDataForm: React.FC<{
             minuteIncrement: 1,
             onClose: (selectedDates) => setBirthHour(selectedDates[0]),
           }}
-          className="w-full p-3 border border-amber-100 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
-          placeholder="Select ..."
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="Select time..."
           required
         />
         {errors.birthHour && <p className="text-red-500 text-sm mt-1">{errors.birthHour}</p>}
       </div>
 
       <div className="mb-6">
-        <label className="block text-amber-900 mb-2" htmlFor="birthCountry">Birth Country</label>
+        <label className="block text-gray-800 mb-2" htmlFor="birthCountry">Birth Country</label>
         <Select
           id="birthCountry"
           options={countryOptions}
@@ -251,12 +254,30 @@ const BirthDataForm: React.FC<{
           onChange={(option) => option && setBirthCountry(option.value)}
           className="w-full"
           classNamePrefix="select"
+          styles={{
+            control: (base) => ({
+              ...base,
+              borderColor: '#d1d5db',
+              borderRadius: '0.5rem',
+              '&:hover': {
+                borderColor: '#d1d5db'
+              }
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isFocused ? '#fde68a' : 'white',
+              color: '#1f2937',
+              '&:hover': {
+                backgroundColor: '#fde68a'
+              }
+            })
+          }}
         />
         {errors.birthCountry && <p className="text-red-500 text-sm mt-1">{errors.birthCountry}</p>}
       </div>
 
       <div className="mb-6">
-        <label className="block text-amber-900 mb-2" htmlFor="birthCounty">Birth County</label>
+        <label className="block text-gray-800 mb-2" htmlFor="birthCounty">Birth County</label>
         <Select
           id="birthCounty"
           options={stateOptions}
@@ -264,12 +285,30 @@ const BirthDataForm: React.FC<{
           onChange={(option) => option && setBirthCounty(option.value)}
           className="w-full"
           classNamePrefix="select"
+          styles={{
+            control: (base) => ({
+              ...base,
+              borderColor: '#d1d5db',
+              borderRadius: '0.5rem',
+              '&:hover': {
+                borderColor: '#d1d5db'
+              }
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isFocused ? '#fde68a' : 'white',
+              color: '#1f2937',
+              '&:hover': {
+                backgroundColor: '#fde68a'
+              }
+            })
+          }}
         />
         {errors.birthCounty && <p className="text-red-500 text-sm mt-1">{errors.birthCounty}</p>}
       </div>
 
       <div className="mb-6">
-        <label className="block text-amber-900 mb-2" htmlFor="birthCity">Birth City</label>
+        <label className="block text-gray-800 mb-2" htmlFor="birthCity">Birth City</label>
         <Select
           id="birthCity"
           options={cityOptions}
@@ -277,12 +316,30 @@ const BirthDataForm: React.FC<{
           onChange={(option) => option && setBirthCity(option.value)}
           className="w-full"
           classNamePrefix="select"
+          styles={{
+            control: (base) => ({
+              ...base,
+              borderColor: '#d1d5db',
+              borderRadius: '0.5rem',
+              '&:hover': {
+                borderColor: '#d1d5db'
+              }
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isFocused ? '#fde68a' : 'white',
+              color: '#1f2937',
+              '&:hover': {
+                backgroundColor: '#fde68a'
+              }
+            })
+          }}
         />
         {errors.birthCity && <p className="text-red-500 text-sm mt-1">{errors.birthCity}</p>}
       </div>
 
       <button 
-        className="w-full p-3 bg-amber-900 text-white rounded hover:bg-amber-700 transition-colors" 
+        className="w-full p-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-semibold" 
         type="submit"
       >
         Get Reading
@@ -356,6 +413,7 @@ const ReadingResults: React.FC<{
 
 // Main Component
 const PlanetPositions: React.FC = () => {
+  const { stopLoading } = useLoading();
   const [readingResult, setReadingResult] = useState<ReadingResult | null>(null);
   const [userInfo, setUserInfo] = useState<{
     name: string;
@@ -364,7 +422,19 @@ const PlanetPositions: React.FC = () => {
     location: string;
   } | null>(null);
 
+  useEffect(() => {
+    // Stop loading when component mounts
+    stopLoading();
+  }, [stopLoading]);
+
+  useEffect(() => {
+    console.log('PlanetPositions mounted');
+    console.log('readingResult:', readingResult);
+    console.log('userInfo:', userInfo);
+  }, [readingResult, userInfo]);
+
   const handleFormSubmit = async (payload: ReadingPayload, userFormInfo: { name: string, city: string, country: string }) => {
+    console.log('Form submitted with payload:', payload);
     try {
       const result = await fetchReading(payload);
       setReadingResult(result);
@@ -407,7 +477,7 @@ const PlanetPositions: React.FC = () => {
           </h2>
         </div>
 
-        <div className="w-full max-w-2xl bg-black/30 backdrop-blur-lg rounded-2xl p-12 shadow-xl border border-white/10">
+        <div className="w-full max-w-2xl bg-white/80 backdrop-blur-lg rounded-2xl p-12 shadow-xl">
           {!readingResult ? (
             <BirthDataForm onSubmit={handleFormSubmit} />
           ) : userInfo && (
