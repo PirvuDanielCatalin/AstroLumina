@@ -14,6 +14,7 @@ import {
   PlanetPosition,
   ReadingResult 
 } from '../types/planetPositions';
+import { planetSymbols, planetOrder } from '../constants/astrology';
 
 // API Service
 const API_KEY = 'a856eb80c8be5ab0221f42b6595f70fd';
@@ -340,8 +341,21 @@ const ReadingResults: React.FC<{
     location: string;
   };
 }> = ({ result, userInfo }) => {
+  // Sort planets according to the defined order
+  const sortedPlanets = [...result.dynamicTexts].sort((a, b) => {
+    const indexA = planetOrder.indexOf(a.planet);
+    const indexB = planetOrder.indexOf(b.planet);
+    // If both planets are not in the order list, maintain original order
+    if (indexA === -1 && indexB === -1) return 0;
+    // If one planet is not in the list, put it at the end
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    // Otherwise sort by the defined order
+    return indexA - indexB;
+  });
+
   return (
-    <div className="max-w-2xl mx-auto mt-2 text-center">
+    <div className="w-full text-center">
       <div className="mb-6">
         <h3 className="text-2xl font-bold text-amber-900 mb-2">{userInfo.name}</h3>
         <p className="text-lg text-amber-700">
@@ -350,38 +364,44 @@ const ReadingResults: React.FC<{
         <p className="text-lg text-amber-700 mb-4">{userInfo.location}</p>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white rounded-lg shadow-md">
         <h4 className="text-xl font-semibold text-amber-900 mb-4">Planetary Positions</h4>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-amber-50">
-                <th className="p-3 font-medium text-amber-900">Planet</th>
-                <th className="p-3 font-medium text-amber-900">Sign</th>
-                <th className="p-3 font-medium text-amber-900">House</th>
+                <th className="p-2 sm:p-3 font-medium text-amber-900 text-sm sm:text-base">Planet</th>
+                <th className="p-2 sm:p-3 font-medium text-amber-900 text-sm sm:text-base">Sign</th>
+                <th className="p-2 sm:p-3 font-medium text-amber-900 text-sm sm:text-base">House</th>
               </tr>
             </thead>
             <tbody>
-              {result.dynamicTexts?.map((position, index) => (
+              {sortedPlanets.map((position, index) => (
                 <tr key={index} className="border-b border-amber-100">
-                  <td className="p-3 text-amber-700">{position.planet}</td>
-                  <td className="p-3 text-amber-700">{position.sign}</td>
-                  <td className="p-3 text-amber-700">{position.house}</td>
+                  <td className="p-2 sm:p-3 text-amber-700 text-sm sm:text-base whitespace-normal">
+                    <span className="mr-2 font-semibold">{planetSymbols[position.planet] || ''}</span>
+                    {position.planet}
+                  </td>
+                  <td className="p-2 sm:p-3 text-amber-700 text-sm sm:text-base whitespace-normal">{position.sign}</td>
+                  <td className="p-2 sm:p-3 text-amber-700 text-sm sm:text-base whitespace-normal">{position.house}</td>
                 </tr>
               ))}
-              {result.dynamicTexts.some(item => item.planet === 'Nodul Nord') && (
+              {sortedPlanets.some(item => item.planet === 'Nodul Nord') && (
                 <tr className="border-b border-amber-100">
-                  <td className="p-3 text-amber-700">Nodul Sud</td>
-                  <td className="p-3 text-amber-700">
+                  <td className="p-2 sm:p-3 text-amber-700 text-sm sm:text-base whitespace-normal">
+                    <span className="mr-2 font-semibold">{planetSymbols['Nodul Sud']}</span>
+                    Nodul Sud
+                  </td>
+                  <td className="p-2 sm:p-3 text-amber-700 text-sm sm:text-base whitespace-normal">
                     {calculateSouthNode(
-                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.sign,
-                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.house
+                      sortedPlanets.find(item => item.planet === 'Nodul Nord')!.sign,
+                      sortedPlanets.find(item => item.planet === 'Nodul Nord')!.house
                     ).sign}
                   </td>
-                  <td className="p-3 text-amber-700">
+                  <td className="p-2 sm:p-3 text-amber-700 text-sm sm:text-base whitespace-normal">
                     {calculateSouthNode(
-                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.sign,
-                      result.dynamicTexts.find(item => item.planet === 'Nodul Nord')!.house
+                      sortedPlanets.find(item => item.planet === 'Nodul Nord')!.sign,
+                      sortedPlanets.find(item => item.planet === 'Nodul Nord')!.house
                     ).house}
                   </td>
                 </tr>
@@ -429,12 +449,12 @@ const PlanetPositions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
           <div className="flex flex-col md:flex-row">
-            {/* Left Panel - Service Description */}
-            <div className="md:w-1/2 p-8 bg-gradient-to-br from-purple-50 to-indigo-50">
+            {/* Left Panel - Service Description - Hidden on mobile */}
+            <div className="hidden md:block md:w-1/2 p-8 bg-gradient-to-br from-purple-50 to-indigo-50">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
                 Discover Your Celestial Blueprint
               </h2>
@@ -459,7 +479,14 @@ const PlanetPositions = () => {
             </div>
             
             {/* Right Panel - Form or Results */}
-            <div className="md:w-1/2 p-8">
+            <div className="w-full md:w-1/2 p-4 sm:p-8">
+              {/* Mobile Title */}
+              <div className="block md:hidden mb-6 text-center">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Discover Your Celestial Blueprint
+                </h2>
+              </div>
+              
               {!result || !userInfo ? (
                 <BirthDataForm onSubmit={handleSubmit} />
               ) : (
