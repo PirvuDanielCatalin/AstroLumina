@@ -9,17 +9,20 @@ import { LoadingProvider } from './contexts/LoadingContext';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './lib/i18n';
 
-createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+
+createRoot(rootElement).render(
   <StrictMode>
-    <I18nextProvider i18n={i18n}>
-      <LoadingProvider>
+    <LoadingProvider>
+      <I18nextProvider i18n={i18n}>
         <Router>
           <Routes>
             <Route path="/" element={<App />} />
             <Route path="/planet-positions" element={<PlanetPositions />} />
           </Routes>
         </Router>
-      </LoadingProvider>
-    </I18nextProvider>
+      </I18nextProvider>
+    </LoadingProvider>
   </StrictMode>
 );

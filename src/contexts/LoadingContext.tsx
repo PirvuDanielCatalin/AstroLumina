@@ -22,15 +22,23 @@ export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <LoadingContext.Provider value={{ isLoading, startLoading, stopLoading }}>
-      {isLoading && <LoadingAnimation />}
-      {children}
+      <div className="relative min-h-screen">
+        <div className="relative">
+          {children}
+        </div>
+        {isLoading && (
+          <div className="fixed inset-0 bg-slate-900 z-[9999]">
+            <LoadingAnimation />
+          </div>
+        )}
+      </div>
     </LoadingContext.Provider>
   );
 };
 
 export const useLoading = () => {
   const context = useContext(LoadingContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useLoading must be used within a LoadingProvider');
   }
   return context;

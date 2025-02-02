@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2015",
     "useDefineForClassFields": true,
-    "lib": ["ES5", "DOM", "DOM.Iterable", "ES2015.Promise"],
+    "lib": ["ES2015", "DOM", "DOM.Iterable", "ES2015.Promise"],
     "module": "ESNext",
     "skipLibCheck": true,
 

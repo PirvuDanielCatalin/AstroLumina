@@ -426,6 +426,14 @@ const PlanetPositions = () => {
   } | null>(null);
   const { startLoading, stopLoading } = useLoading();
 
+  useEffect(() => {
+    startLoading();
+    const timeoutId = window.setTimeout(() => {
+      stopLoading();
+    }, 1500);
+    return () => window.clearTimeout(timeoutId);
+  }, [startLoading, stopLoading]);
+
   const handleSubmit = async (
     payload: ReadingPayload,
     displayData: { name: string; location: string }

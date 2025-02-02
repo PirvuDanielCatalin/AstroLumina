@@ -9,17 +9,16 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { stopLoading } = useLoading();
+  const { startLoading, stopLoading } = useLoading();
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Simulate initial loading
-    const timer = setTimeout(() => {
+    startLoading();
+    const timeoutId = window.setTimeout(() => {
       stopLoading();
-    }, 2000); // Show loading animation for 2 seconds
-
-    return () => clearTimeout(timer);
-  }, [stopLoading]);
+    }, 2000);
+    return () => window.clearTimeout(timeoutId);
+  }, [startLoading, stopLoading]);
 
   useEffect(() => {
     const handleScroll = () => {
