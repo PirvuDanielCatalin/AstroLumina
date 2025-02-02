@@ -14,10 +14,8 @@ function App() {
 
   useEffect(() => {
     startLoading();
-    const timeoutId = window.setTimeout(() => {
-      stopLoading();
-    }, 2000);
-    return () => window.clearTimeout(timeoutId);
+    const timer = setTimeout(stopLoading, 1500);
+    return () => clearTimeout(timer);
   }, [startLoading, stopLoading]);
 
   useEffect(() => {

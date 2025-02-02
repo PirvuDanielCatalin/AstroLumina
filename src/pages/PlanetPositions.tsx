@@ -428,10 +428,8 @@ const PlanetPositions = () => {
 
   useEffect(() => {
     startLoading();
-    const timeoutId = window.setTimeout(() => {
-      stopLoading();
-    }, 1500);
-    return () => window.clearTimeout(timeoutId);
+    const timer = setTimeout(stopLoading, 1500);
+    return () => clearTimeout(timer);
   }, [startLoading, stopLoading]);
 
   const handleSubmit = async (
