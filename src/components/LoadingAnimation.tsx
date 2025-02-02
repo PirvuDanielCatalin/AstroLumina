@@ -7,20 +7,32 @@ const LoadingAnimation: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
     const setCanvasSize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      const scale = window.devicePixelRatio || 1;
+
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+
+      ctx.scale(scale, scale);
     };
 
     setCanvasSize();
     window.addEventListener('resize', setCanvasSize);
 
-    const points: { x: number; y: number; vx: number; vy: number }[] = [];
+    const points: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+    }> = [];
+
     const numPoints = Math.min(100, Math.floor((window.innerWidth * window.innerHeight) / 10000));
     const connectionDistance = 150;
     const pointSize = 2;
@@ -34,12 +46,13 @@ const LoadingAnimation: React.FC = () => {
       });
     }
 
-    let animationFrameId: number;
+    let animationFrameId = 0;
 
     const animate = () => {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
-      points.forEach(point => {
+      points.forEach((point) => {
         point.x += point.vx;
         point.y += point.vy;
 
@@ -53,13 +66,13 @@ const LoadingAnimation: React.FC = () => {
       });
 
       points.forEach((point, i) => {
-        points.slice(i + 1).forEach(otherPoint => {
+        points.slice(i + 1).forEach((otherPoint) => {
           const dx = point.x - otherPoint.x;
           const dy = point.y - otherPoint.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < connectionDistance) {
-            const opacity = 1 - (distance / connectionDistance);
+            const opacity = 1 - distance / connectionDistance;
             ctx.strokeStyle = `rgba(254, 240, 138, ${opacity * 0.5})`;
             ctx.beginPath();
             ctx.moveTo(point.x, point.y);
@@ -69,14 +82,14 @@ const LoadingAnimation: React.FC = () => {
         });
       });
 
-      animationFrameId = requestAnimationFrame(animate);
+      animationFrameId = window.requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
       window.removeEventListener('resize', setCanvasSize);
-      cancelAnimationFrame(animationFrameId);
+      window.cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
@@ -89,7 +102,8 @@ const LoadingAnimation: React.FC = () => {
         left: 0,
         width: '100%',
         height: '100%',
-        touchAction: 'none'
+        touchAction: 'none',
+        WebkitTapHighlightColor: 'transparent'
       }}
     />
   );

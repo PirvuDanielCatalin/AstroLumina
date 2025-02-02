@@ -16,6 +16,11 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    target: 'es2015',
+    minify: 'terser',
+    terserOptions: {
+      safari10: true
+    },
     rollupOptions: {
       output: {
         manualChunks: {
