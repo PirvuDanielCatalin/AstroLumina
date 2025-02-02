@@ -1,0 +1,20 @@
+{
+  "hero-presentation": "Deblocheaza secretele propriului destin prin intelepciunea straveche a stelelor",
+  "services": "Servicii",
+  "about": "Despre mine",
+  "contact": "Contact",
+  "learn-more": "Afla mai multe...",
+  "services-list": {
+    "planet-positions": "Pozitiile planetelor",
+    "astral-chart": "Harta astrala",
+    "karmic-chart": "Harta karmica",
+    "relationship-chart": "Harta relationala",
+    "future-chart": "Harta previzionala",
+    "consultations": "Consultatii 1:1"
+  },
+  "notFound": {
+    "title": "Pagină Negăsită",
+    "description": "Stelele s-au aliniat, dar această pagină pare să fie în altă constelație.",
+    "backHome": "Înapoi Acasă"
+  }
+}

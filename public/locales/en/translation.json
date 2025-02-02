@@ -1,0 +1,20 @@
+{
+  "hero-presentation": "Unlock the secrets of your destiny through the ancient wisdom of the stars",
+  "services": "Services",
+  "about": "About",
+  "contact": "Contact",
+  "learn-more": "Learn more",
+  "services-list": {
+    "planet-positions": "Planet Positions",
+    "astral-chart": "Astral Chart",
+    "karmic-chart": "Karmic Chart",
+    "relationship-chart": "Relationship Chart",
+    "future-chart": "Future Chart",
+    "consultations": "Consultations 1:1"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The stars have aligned, but this page seems to be in another constellation.",
+    "backHome": "Back to Home"
+  }
+}

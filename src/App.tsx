@@ -29,7 +29,14 @@ function App() {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const offset = 80; // pentru a compensa navbar-ul fix
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
       setIsMobileMenuOpen(false);
     }
   };
@@ -55,9 +62,36 @@ function App() {
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                  <a href="#services" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('services')}</a>
-                  <a href="#about" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('about')}</a>
-                  <a href="#contact" className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors">{t('contact')}</a>
+                  <a 
+                    href="#services" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection('services');
+                    }}
+                    className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors"
+                  >
+                    {t('services')}
+                  </a>
+                  <a 
+                    href="#about" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection('about');
+                    }}
+                    className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors"
+                  >
+                    {t('about')}
+                  </a>
+                  <a 
+                    href="#contact" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection('contact');
+                    }}
+                    className="text-white hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-semibold transition-colors"
+                  >
+                    {t('contact')}
+                  </a>
                   <LanguageSwitcher />
                 </div>
               </div>

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App.tsx';
 import PlanetPositions from './pages/PlanetPositions.tsx';
+import NotFound from './pages/NotFound.tsx';
 import './styles/starry-theme.css';
 import 'flatpickr/dist/themes/material_blue.css';
 import { LoadingProvider } from './contexts/LoadingContext';
@@ -20,6 +21,7 @@ createRoot(rootElement).render(
           <Routes>
             <Route path="/" element={<App />} />
             <Route path="/planet-positions" element={<PlanetPositions />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </I18nextProvider>
