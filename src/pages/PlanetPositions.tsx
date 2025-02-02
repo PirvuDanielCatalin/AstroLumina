@@ -6,6 +6,7 @@ import axios from 'axios';
 import 'flatpickr/dist/themes/material_blue.css';
 import Flatpickr from 'react-flatpickr';
 import { useLoading } from '../contexts/LoadingContext';
+import LoadingAnimation from '../components/LoadingAnimation';
 import { 
   LocationCoordinates,
   FormErrors,
@@ -416,7 +417,7 @@ const ReadingResults: React.FC<{
 };
 
 // Main Component
-const PlanetPositions = () => {
+const PlanetPositions: React.FC = () => {
   const [result, setResult] = useState<ReadingResult | null>(null);
   const [userInfo, setUserInfo] = useState<{
     name: string;
@@ -424,7 +425,7 @@ const PlanetPositions = () => {
     birthHour: Date;
     location: string;
   } | null>(null);
-  const { startLoading, stopLoading } = useLoading();
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   useEffect(() => {
     startLoading();
@@ -457,6 +458,11 @@ const PlanetPositions = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
+      {isLoading && (
+        <div className="fixed inset-0 bg-slate-900 z-[9999]">
+          <LoadingAnimation />
+        </div>
+      )}
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
           <div className="flex flex-col md:flex-row">
