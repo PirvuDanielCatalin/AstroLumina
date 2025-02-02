@@ -15,16 +15,24 @@ const LoadingAnimation: React.FC = () => {
       const height = window.innerHeight;
       const scale = window.devicePixelRatio || 1;
 
-      canvas.style.width = width + 'px';
-      canvas.style.height = height + 'px';
       canvas.width = width * scale;
       canvas.height = height * scale;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
 
       ctx.scale(scale, scale);
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, width, height);
+    };
+
+    const resizeHandler = () => {
+      window.requestAnimationFrame(() => {
+        setCanvasSize();
+      });
     };
 
     setCanvasSize();
-    window.addEventListener('resize', setCanvasSize);
+    window.addEventListener('resize', resizeHandler, { passive: true });
 
     const points: Array<{
       x: number;
@@ -33,7 +41,7 @@ const LoadingAnimation: React.FC = () => {
       vy: number;
     }> = [];
 
-    const numPoints = Math.min(100, Math.floor((window.innerWidth * window.innerHeight) / 10000));
+    const numPoints = Math.min(50, Math.floor((window.innerWidth * window.innerHeight) / 20000));
     const connectionDistance = 150;
     const pointSize = 2;
 
@@ -46,15 +54,23 @@ const LoadingAnimation: React.FC = () => {
       });
     }
 
-    let animationFrameId = 0;
+    let isAnimating = true;
+    let lastTime = 0;
 
-    const animate = () => {
+    const animate = (timestamp: number) => {
+      if (!isAnimating) return;
+
+      const deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
+
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
       points.forEach((point) => {
-        point.x += point.vx;
-        point.y += point.vy;
+        if (deltaTime) {
+          point.x += point.vx * (deltaTime / 16);
+          point.y += point.vy * (deltaTime / 16);
+        }
 
         if (point.x < 0 || point.x > window.innerWidth) point.vx *= -1;
         if (point.y < 0 || point.y > window.innerHeight) point.vy *= -1;
@@ -82,30 +98,46 @@ const LoadingAnimation: React.FC = () => {
         });
       });
 
-      animationFrameId = window.requestAnimationFrame(animate);
+      window.requestAnimationFrame(animate);
     };
 
-    animate();
+    window.requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('resize', setCanvasSize);
-      window.cancelAnimationFrame(animationFrameId);
+      isAnimating = false;
+      window.removeEventListener('resize', resizeHandler);
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        touchAction: 'none',
-        WebkitTapHighlightColor: 'transparent'
-      }}
-    />
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      WebkitTransform: 'translate3d(0,0,0)',
+      transform: 'translate3d(0,0,0)',
+      WebkitBackfaceVisibility: 'hidden',
+      backfaceVisibility: 'hidden',
+      WebkitPerspective: 1000
+    }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          touchAction: 'none',
+          WebkitTapHighlightColor: 'transparent',
+          WebkitTransform: 'translate3d(0,0,0)',
+          transform: 'translate3d(0,0,0)'
+        }}
+      />
+    </div>
   );
 };
 

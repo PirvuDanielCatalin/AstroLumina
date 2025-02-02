@@ -13,21 +13,37 @@ export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isLoading, setIsLoading] = useState(false);
 
   const startLoading = useCallback(() => {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
     setIsLoading(true);
   }, []);
 
   const stopLoading = useCallback(() => {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
     setIsLoading(false);
   }, []);
 
   return (
     <LoadingContext.Provider value={{ isLoading, startLoading, stopLoading }}>
-      <div className="relative min-h-screen">
-        <div className="relative">
+      <div className="min-h-screen w-full">
+        <div className="relative w-full">
           {children}
         </div>
         {isLoading && (
-          <div className="fixed inset-0 bg-slate-900 z-[9999]">
+          <div 
+            className="fixed inset-0 bg-slate-900 z-[9999] w-full h-full" 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100vw',
+              height: '100vh',
+              WebkitTransform: 'translate3d(0,0,0)'
+            }}
+          >
             <LoadingAnimation />
           </div>
         )}
