@@ -55,9 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ isScrolled, onlyLogo = false, lightThem
     ? "inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:text-amber-600 focus:outline-none"
     : "inline-flex items-center justify-center p-2 rounded-md text-white hover:text-yellow-200 focus:outline-none";
 
-  const mobileLinkClasses = lightTheme
-    ? "text-gray-800 hover:text-amber-600 block px-3 py-2 rounded-md text-base font-semibold transition-colors"
-    : "text-white hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-semibold transition-colors";
+  const mobileLinkClasses = linkClasses;
 
   const mobileMenuClasses = lightTheme
     ? `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-white/50 backdrop-blur-sm`
