@@ -60,8 +60,8 @@ const Navbar: React.FC<NavbarProps> = ({ isScrolled, onlyLogo = false, lightThem
     : "text-white hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-semibold transition-colors";
 
   const mobileMenuClasses = lightTheme
-    ? `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-white/50 backdrop-blur-sm border-b border-gray-200`
-    : `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-black/50 backdrop-blur-sm border-b border-white/10`;
+    ? `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} border-b border-gray-200`
+    : `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} border-b border-white/10`;
 
   // Close mobile menu when window is resized to desktop size
   useEffect(() => {
