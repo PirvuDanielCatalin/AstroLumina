@@ -55,11 +55,13 @@ const Navbar: React.FC<NavbarProps> = ({ isScrolled, onlyLogo = false, lightThem
     ? "inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:text-amber-600 focus:outline-none"
     : "inline-flex items-center justify-center p-2 rounded-md text-white hover:text-yellow-200 focus:outline-none";
 
-  const mobileLinkClasses = linkClasses;
+  const mobileLinkClasses = lightTheme
+    ? "text-gray-800 hover:text-amber-600 block px-3 py-2 rounded-md text-base font-semibold transition-colors"
+    : "text-white hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-semibold transition-colors";
 
   const mobileMenuClasses = lightTheme
-    ? `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-white/50 backdrop-blur-sm`
-    : `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-black/50 backdrop-blur-sm`;
+    ? `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-white/50 backdrop-blur-sm border-b border-gray-200`
+    : `md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-black/50 backdrop-blur-sm border-b border-white/10`;
 
   // Close mobile menu when window is resized to desktop size
   useEffect(() => {
