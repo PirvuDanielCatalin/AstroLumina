@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App.tsx';
@@ -14,17 +13,15 @@ const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 
 createRoot(rootElement).render(
-  <StrictMode>
-    <LoadingProvider>
-      <I18nextProvider i18n={i18n}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<App />} />
-            <Route path="/planet-positions" element={<PlanetPositions />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-      </I18nextProvider>
-    </LoadingProvider>
-  </StrictMode>
+  <LoadingProvider>
+    <I18nextProvider i18n={i18n}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/planet-positions" element={<PlanetPositions />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </I18nextProvider>
+  </LoadingProvider>
 );
