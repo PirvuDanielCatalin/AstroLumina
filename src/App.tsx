@@ -15,9 +15,11 @@ function App() {
 
   useEffect(() => {
     startLoading();
-    const timer = setTimeout(stopLoading, 1500);
+    const timer = setTimeout(() => {
+      stopLoading();
+    }, 1500);
     return () => clearTimeout(timer);
-  }, [startLoading, stopLoading]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
