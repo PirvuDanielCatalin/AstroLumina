@@ -7,6 +7,70 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>AstroLumina</title>
+    <script>
+      // Early error logging
+      window.onerror = function(msg, url, line, col, error) {
+        try {
+          var errors = JSON.parse(localStorage.getItem('early_errors') || '[]');
+          errors.push({
+            timestamp: new Date().toISOString(),
+            message: msg,
+            url: url,
+            line: line,
+            col: col,
+            error: error ? error.stack : 'No stack trace',
+            userAgent: navigator.userAgent
+          });
+          localStorage.setItem('early_errors', JSON.stringify(errors.slice(-20)));
+          
+          // Show error UI
+          var div = document.createElement('div');
+          div.style.cssText = 'position:fixed;top:0;left:0;right:0;background:white;padding:20px;z-index:9999;';
+          div.innerHTML = '<h2 style="color:red">Loading Error</h2>' +
+                         '<p>The app failed to load. Error details have been saved.</p>' +
+                         '<button onclick="location.reload()" style="padding:10px;background:#007AFF;color:white;border:none;border-radius:6px;">Refresh</button>' +
+                         '<button onclick="downloadLogs()" style="margin-left:10px;padding:10px;background:#FF3B30;color:white;border:none;border-radius:6px;">Download Logs</button>';
+          document.body && document.body.appendChild(div);
+        } catch (e) {
+          console.error('Error in early error handler:', e);
+        }
+      };
+
+      // Function to download logs
+      window.downloadLogs = function() {
+        try {
+          var allLogs = {
+            early_errors: JSON.parse(localStorage.getItem('early_errors') || '[]'),
+            app_errors: JSON.parse(localStorage.getItem('app_errors') || '[]'),
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString(),
+            localStorage: Object.keys(localStorage).reduce(function(obj, key) {
+              try {
+                obj[key] = localStorage.getItem(key);
+              } catch (e) {}
+              return obj;
+            }, {})
+          };
+          
+          var blob = new Blob([JSON.stringify(allLogs, null, 2)], { type: 'application/json' });
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'astrolumina-debug-' + new Date().toISOString() + '.json';
+          a.click();
+        } catch (e) {
+          alert('Error downloading logs: ' + e.message);
+        }
+      };
+
+      // Add debug button after 2 seconds
+      setTimeout(function() {
+        var debugButton = document.createElement('button');
+        debugButton.innerHTML = '📱 Debug';
+        debugButton.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;padding:10px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:6px;font-family:system-ui;';
+        debugButton.onclick = window.downloadLogs;
+        document.body.appendChild(debugButton);
+      }, 2000);
+    </script>
   </head>
   <body>
     <div id="root"></div>
