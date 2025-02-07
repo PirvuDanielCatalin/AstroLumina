@@ -1,8 +1,12 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), sentryVitePlugin({
+    org: "pirvudanielcatalin",
+    project: "javascript-react"
+  })],
   server: {
     port: 5173,
     host: true,
@@ -24,7 +28,7 @@ export default defineConfig({
     modulePreload: {
       polyfill: true
     },
-    sourcemap: false,
+    sourcemap: true,
     minify: 'esbuild',
     cssMinify: true,
     assetsInlineLimit: 4096,
