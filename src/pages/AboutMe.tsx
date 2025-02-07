@@ -2,7 +2,21 @@ import React from 'react';
 
 const AboutMe = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
+    <div className="relative min-h-screen bg-gradient-to-b from-white to-amber-50">
+      {/* Starry background */}
+      <div className="absolute inset-0 stars">
+        {/* Shooting stars */}
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+      </div>
       <div className="max-w-4xl mx-auto px-4 py-16">
         {/* Photo Frame */}
         <div className="w-48 h-48 mx-auto mb-8 border-4 border-dashed border-amber-200 rounded-full flex items-center justify-center">
