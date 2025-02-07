@@ -62,14 +62,16 @@
         }
       };
 
-      // Add debug button after 2 seconds
-      setTimeout(function() {
-        var debugButton = document.createElement('button');
-        debugButton.innerHTML = '📱 Debug';
-        debugButton.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;padding:10px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:6px;font-family:system-ui;';
-        debugButton.onclick = window.downloadLogs;
-        document.body.appendChild(debugButton);
-      }, 2000);
+      // Add debug button after 2 seconds if debug mode is enabled
+      if (import.meta.env.VITE_DEBUG_MODE === 'true') {
+        setTimeout(function() {
+          var debugButton = document.createElement('button');
+          debugButton.innerHTML = '📱 Debug';
+          debugButton.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;padding:10px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:6px;font-family:system-ui;';
+          debugButton.onclick = window.downloadLogs;
+          document.body.appendChild(debugButton);
+        }, 2000);
+      }
     </script>
   </head>
   <body>
