@@ -89,10 +89,25 @@ const BirthDataForm: React.FC<{
 
   // Location data effects
   useEffect(() => {
-    const countries = Country.getAllCountries().map(country => ({ 
-      value: country.isoCode, 
-      label: country.name 
+    const countries = Country.getAllCountries().map(country => ({
+      value: country.isoCode,
+      label: country.name
     }));
+    // Set Romania as default
+    const romania = countries.find(c => c.label === 'Romania');
+    if (romania) {
+      setBirthCountry(romania.value);
+      const romanianStates = State.getStatesOfCountry(romania.value).map(state => ({
+        value: state.isoCode,
+        label: state.name
+      }));
+      setStateOptions([{ value: '', label: 'Select ...' }, ...romanianStates]);
+      const romanianCities = City.getCitiesOfCountry(romania.value)?.map(city => ({
+        value: city.name,
+        label: city.name
+      })) || [];
+      setCityOptions([{ value: '', label: 'Select ...' }, ...romanianCities]);
+    }
     setCountryOptions([{ value: '', label: 'Select ...' }, ...countries]);
   }, []);
 
