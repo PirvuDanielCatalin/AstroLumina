@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   isScrolled: boolean;
@@ -114,6 +115,9 @@ const Navbar: React.FC<NavbarProps> = ({ isScrolled, onlyLogo = false, lightThem
                 {/* Desktop menu */}
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
+                    <Link to="/about" className={linkClasses}>
+                      About Me
+                    </Link>
                     <a 
                       href="#services" 
                       onClick={(e) => {
@@ -162,6 +166,9 @@ const Navbar: React.FC<NavbarProps> = ({ isScrolled, onlyLogo = false, lightThem
         {!onlyLogo && (
           <div className={mobileMenuClasses}>
             <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link to="/about" className={mobileLinkClasses}>
+                About Me
+              </Link>
               <a
                 href="#services"
                 onClick={(e) => {

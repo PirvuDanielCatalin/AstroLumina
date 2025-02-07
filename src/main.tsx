@@ -10,6 +10,7 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from './lib/i18n';
 import PlanetPositions from './pages/PlanetPositions.tsx';
 import NotFound from './pages/NotFound.tsx';
+import AboutMe from './pages/AboutMe';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
@@ -22,6 +23,7 @@ createRoot(rootElement).render(
           <Routes>
             <Route path="/" element={<App />} />
             <Route path="/planet-positions" element={<PlanetPositions />} />
+            <Route path="/about" element={<AboutMe />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
