@@ -115,9 +115,6 @@ const Navbar: React.FC<NavbarProps> = ({ isScrolled, onlyLogo = false, lightThem
                 {/* Desktop menu */}
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
-                    <Link to="/about" className={linkClasses}>
-                      About Me
-                    </Link>
                     <a 
                       href="#services" 
                       onClick={(e) => {
@@ -128,16 +125,9 @@ const Navbar: React.FC<NavbarProps> = ({ isScrolled, onlyLogo = false, lightThem
                     >
                       {t('services')}
                     </a>
-                    <a 
-                      href="#about" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection('about');
-                      }}
-                      className={linkClasses}
-                    >
+                    <Link to="/about" className={linkClasses}>
                       {t('about')}
-                    </a>
+                    </Link>
                     <a 
                       href="#contact" 
                       onClick={(e) => {

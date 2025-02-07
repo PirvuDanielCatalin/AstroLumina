@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Star } from 'lucide-react';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
 import axios from 'axios';
 import 'flatpickr/dist/themes/material_blue.css';
 import Flatpickr from 'react-flatpickr';
 import { useLoading } from '../contexts/LoadingContext';
-import LoadingAnimation from '../components/LoadingAnimation';
 import Navbar from '../components/Navbar';
 import { 
   LocationCoordinates,
