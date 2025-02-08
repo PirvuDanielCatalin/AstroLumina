@@ -11,6 +11,8 @@ import i18n from './lib/i18n';
 import PlanetPositions from './pages/PlanetPositions.tsx';
 import NotFound from './pages/NotFound.tsx';
 import AboutMe from './pages/AboutMe';
+import Contact from './pages/Contact';
+import Services from './pages/Services';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
@@ -22,8 +24,10 @@ createRoot(rootElement).render(
         <Router>
           <Routes>
             <Route path="/" element={<App />} />
-            <Route path="/planet-positions" element={<PlanetPositions />} />
             <Route path="/about" element={<AboutMe />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/planet-positions" element={<PlanetPositions />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>

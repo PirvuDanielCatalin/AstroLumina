@@ -472,8 +472,8 @@ const PlanetPositions: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100">
-      <Navbar isScrolled={true} onlyLogo={true} lightTheme={true} />
-      
+      <Navbar isScrolled={true} lightTheme={true} />
+
       <main className="container mx-auto px-6 pt-24">
         <h1 className="text-4xl font-bold text-center mb-8">Planet Positions</h1>
         <div className="max-w-7xl mx-auto">
