@@ -13,8 +13,9 @@ const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navClasses = lightTheme
-      ? "fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-md"
-      : "fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-md";
+    ? `fixed top-0 left-0 right-0 z-50 bg-white/50 ${isOpen ? 'backdrop-blur-md' : ''}`
+    : `fixed top-0 left-0 right-0 z-50 bg-black/50 ${isOpen ? 'backdrop-blur-md' : ''}`;
+  const navSubdivClasses = `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${!isOpen ? 'backdrop-blur-md' : ''}`
 
   const linkClasses = lightTheme
     ? "text-gray-800 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-semibold transition-colors"
@@ -52,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
 
   return (
     <nav className={navClasses}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={navSubdivClasses}>
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
