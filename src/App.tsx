@@ -228,7 +228,7 @@ function App() {
           </section>
 
           {/* Contact Section */}
-          <section className="py-16 bg-gradient-to-br from-amber-50 to-amber-100">
+          <section id="contact" className="py-16 bg-gradient-to-br from-amber-50 to-amber-100">
             <div className="max-w-4xl mx-auto px-6">
               <h2 className="text-4xl font-bold text-center text-amber-800 mb-12">Contact</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

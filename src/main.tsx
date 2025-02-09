@@ -21,7 +21,7 @@ createRoot(rootElement).render(
   <React.StrictMode>
     <LoadingProvider>
       <I18nextProvider i18n={i18n}>
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
             <Route path="/" element={<App />} />
             <Route path="/about" element={<AboutMe />} />
