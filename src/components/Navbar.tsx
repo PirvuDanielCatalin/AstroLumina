@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -11,11 +11,12 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const navbarRef = useRef<HTMLDivElement>(null);
 
   const navClasses = lightTheme
-    ? `fixed top-0 left-0 right-0 z-50 bg-white/50 ${isOpen ? 'backdrop-blur-md' : ''}`
-    : `fixed top-0 left-0 right-0 z-50 bg-black/50 ${isOpen ? 'backdrop-blur-md' : ''}`;
-  const navSubdivClasses = `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${!isOpen ? 'backdrop-blur-md' : ''}`
+    ? `fixed top-0 left-0 right-0 z-50 bg-white/50 ${!isOpen ? 'backdrop-blur-md' : ''}`
+    : `fixed top-0 left-0 right-0 z-50 bg-black/50 ${!isOpen ? 'backdrop-blur-md' : ''}`;
+  const navSubdivClasses = `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${isOpen ? 'backdrop-blur-md' : ''}`
 
   const linkClasses = lightTheme
     ? "text-gray-800 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-semibold transition-colors"
@@ -39,7 +40,6 @@ const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
 
   const mobileMenuContentClasses = "px-2 pt-2 pb-3 space-y-1";
 
-  // Close mobile menu when window is resized to desktop size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -50,6 +50,24 @@ const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <nav className={navClasses}>
@@ -134,7 +152,7 @@ const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
       </div>
 
       {/* Mobile menu */}
-      <div className={mobileMenuClasses}>
+      <div ref={navbarRef} className={mobileMenuClasses}>
         <div className={mobileMenuContentClasses}>
           <Link
             to="/services"
