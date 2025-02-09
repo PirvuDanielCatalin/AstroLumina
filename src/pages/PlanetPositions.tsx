@@ -11,11 +11,11 @@ import {
   FormErrors,
   SelectOption,
   ReadingPayload,
-  PlanetPosition,
   ReadingResult 
 } from '../types/planetPositions';
 import { planetSymbols, planetOrder } from '../constants/astrology';
 import astralChartSvg from '../assets/astral-chart.svg';
+import { generatePlanetPositionsPDF } from '../templates/pdf/planetPositions';
 
 // API Service
 const API_KEY = 'a856eb80c8be5ab0221f42b6595f70fd';
@@ -370,6 +370,16 @@ const ReadingResults: React.FC<{
     return indexA - indexB;
   });
 
+  const handleDownloadPDF = () => {
+    const doc = generatePlanetPositionsPDF(result, {
+      name: userInfo.name,
+      date: new Date(userInfo.birthDate).toLocaleDateString(),
+      time: new Date(userInfo.birthHour).toLocaleTimeString(),
+      location: userInfo.location
+    });
+    doc.save(`astral-chart-${userInfo.name.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+  };
+
   return (
     <div className="w-full text-center">
       <div className="mb-6">
@@ -425,6 +435,39 @@ const ReadingResults: React.FC<{
             </tbody>
           </table>
         </div>
+        <button 
+          onClick={handleDownloadPDF}
+          className="download-pdf-btn hover:bg-amber-300 transition-colors duration-300 w-full"
+          style={{
+            marginTop: '20px',
+            padding: '12px 20px',
+            backgroundColor: '#FFD700',
+            color: '#1a1a1a',
+            border: '1px solid #FFD700',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            fontWeight: '500',
+            boxShadow: '0 2px 4px rgba(255, 215, 0, 0.3)'
+          }}
+        >
+          <svg 
+            width="16" 
+            height="16" 
+            viewBox="0 0 16 16" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              d="M14 11v3H2v-3H0v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zm-1-4l-1.41-1.41L8 9.17V0H6v9.17L2.41 5.59 1 7l6 6 6-6z" 
+              fill="currentColor"
+            />
+          </svg>
+          Download PDF
+        </button>
       </div>
     </div>
   );

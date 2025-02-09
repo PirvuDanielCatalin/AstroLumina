@@ -16,6 +16,36 @@ export const planetSymbols: { [key: string]: string } = {
   'Nodul Sud': '☋'
 };
 
+export const zodiacSymbols: { [key: string]: string } = {
+  'Aries': '♈',
+  'Taurus': '♉',
+  'Gemini': '♊',
+  'Cancer': '♋',
+  'Leo': '♌',
+  'Virgo': '♍',
+  'Libra': '♎',
+  'Scorpio': '♏',
+  'Sagittarius': '♐',
+  'Capricorn': '♑',
+  'Aquarius': '♒',
+  'Pisces': '♓'
+};
+
+export const zodiacOrder: string[] = [
+  'Aries',
+  'Taurus',
+  'Gemini',
+  'Cancer',
+  'Leo',
+  'Virgo',
+  'Libra',
+  'Scorpio',
+  'Sagittarius',
+  'Capricorn',
+  'Aquarius',
+  'Pisces'
+];
+
 export const planetOrder: string[] = [
   'Sun',
   'Moon',

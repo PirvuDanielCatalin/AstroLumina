@@ -20,6 +20,8 @@
     "i18next": "^19.8.4",
     "i18next-http-backend": "^3.0.2",
     "intersection-observer": "^0.12.2",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "lucide-react": "^0.344.0",
     "moment": "^2.29.4",
     "react": "^18.3.1",
