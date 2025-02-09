@@ -53,17 +53,19 @@ const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
+      const buttonElement = document.querySelector('button[aria-expanded]');
+      if (
+        navbarRef.current && 
+        !navbarRef.current.contains(event.target as Node) && 
+        isOpen &&
+        buttonElement !== event.target &&
+        !buttonElement?.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -110,9 +112,11 @@ const Navbar: React.FC<NavbarProps> = ({ lightTheme = false }) => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={buttonClasses}
-              aria-expanded="false"
+              aria-expanded={isOpen}
             >
-              <span className="sr-only">Open main menu</span>
+              <span className="sr-only">
+                {isOpen ? 'Close main menu' : 'Open main menu'}
+              </span>
               {!isOpen ? (
                 <svg
                   className="block h-6 w-6"
