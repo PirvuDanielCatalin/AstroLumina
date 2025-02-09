@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from './components/LanguageSwitcher';
-import Navbar from './components/Navbar';
-import ScrollToTopButton from './components/ScrollToTopButton';
+import Navbar from './components/navbar/Navbar';
+import ScrollToTopButton from './components/scroll/ScrollToTopButton';
 import { useLoading } from './contexts/LoadingContext';
-import { Star, Moon, Sun, Sparkles, Clock, MessageCircle, Earth } from 'lucide-react';
+import { Star, Sparkles, Clock, MessageCircle } from 'lucide-react';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);

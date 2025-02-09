@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import LoadingAnimation from '../components/LoadingAnimation';
+import LoadingAnimation from '../components/animations/LoadingAnimation';
 
 interface LoadingContextType {
   isLoading: boolean;

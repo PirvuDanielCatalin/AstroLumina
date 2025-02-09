@@ -5,7 +5,7 @@ import axios from 'axios';
 import 'flatpickr/dist/themes/material_blue.css';
 import Flatpickr from 'react-flatpickr';
 import { useLoading } from '../contexts/LoadingContext';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/navbar/Navbar';
 import { 
   LocationCoordinates,
   FormErrors,
